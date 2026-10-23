@@ -18,4 +18,6 @@ public class CorreoException extends RuntimeException {
 	public CorreoException(String mensaje, Throwable causa) {
 		super(mensaje, causa);
 	}
+	// hols
+	
 }
