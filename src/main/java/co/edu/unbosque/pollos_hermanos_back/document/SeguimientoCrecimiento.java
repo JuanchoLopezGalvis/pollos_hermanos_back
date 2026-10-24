@@ -15,10 +15,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
  * El documento se vincula al lote de PostgreSQL por su código y solo se guarda
  * si ese lote existe y está activo. La edad se calcula con la fecha de ingreso
  * registrada en PostgreSQL. Aquí no se guarda ningún dato transaccional
- * (mortalidad, alimento, sanidad ni costos).
+ * (mortalidad, alimento, sanidad ni costos). Un lote puede tener varios
+ * seguimientos el mismo día (por ejemplo, mañana y tarde); el índice por lote y
+ * fecha solo acelera las consultas.
  */
 @Document(collection = "seguimientos_crecimiento")
-@CompoundIndex(name = "lote_fecha_unico", def = "{'codigoLote': 1, 'fecha': 1}", unique = true)
+@CompoundIndex(name = "lote_fecha", def = "{'codigoLote': 1, 'fecha': 1}")
 public class SeguimientoCrecimiento {
 
 	/** Identificador del documento en MongoDB. */

@@ -57,15 +57,23 @@ Convenciones:
   van solo en PostgreSQL. MongoDB solo guarda el seguimiento del crecimiento.
 - Antes de guardar un documento en MongoDB, verificar en PostgreSQL que el lote existe y está activo.
   La edad del lote se calcula con su fecha de ingreso en PostgreSQL.
-- El modelo relacional todavía está en diseño (Fase 1). No inventes tablas ni columnas:
-  si falta una definición, pregunta antes de crearla.
+- El modelo relacional aprobado está en `docs/modelo_relacional.md`. No inventes tablas ni columnas
+  fuera de ese documento: si falta una definición, pregunta antes de crearla.
+- Cada módulo tiene su script en `sql/modulo_NN_*.sql` (se ejecuta como superusuario y deja los
+  objetos a nombre de `pollos_owner`) y sus pruebas en `sql/pruebas/`. Se instala con
+  `./instalar_bd.sh modulo_NN_*.sql`.
+- La base real tiene `ALTER DEFAULT PRIVILEGES` que da SELECT, INSERT, UPDATE y DELETE a
+  `pollos_app` en toda tabla nueva. Cada script de módulo debe hacer `REVOKE ALL ... FROM pollos_app`
+  antes de sus `GRANT`, para que la aplicación no pueda borrar lo que no debe.
 
 ## Reglas del negocio
 
 Lotes y galpones
 - Cada galpón tiene capacidad máxima y estado (disponible, ocupado, en mantenimiento).
-- Un galpón aloja un solo lote activo a la vez.
-- Estados del lote: en engorde, listo para venta, vendido, cerrado. Ciclo de 40 a 50 días.
+- Producción escalonada: un galpón aloja VARIOS lotes a la vez (entra uno nuevo cada semana).
+  La suma de aves vivas de sus lotes activos no supera la capacidad. Cada lote se sigue por separado.
+- Estados del lote: en engorde, listo para venta, vendido, cerrado. Engorde de 35 a 45 días
+  (venta estimada por defecto: ingreso + 40).
 - Aves disponibles = cantidad inicial - mortalidad registrada - aves vendidas.
 - Mortalidad de referencia: 5% por lote. El usuario registra la mortalidad real cada día;
   el sistema alerta cuando la acumulada supera el 5%.
@@ -91,7 +99,8 @@ Costos
 Comercial
 - Un pedido puede tomar aves de varios lotes (`DetallePedido`, relación N:M);
   solo se piden aves de lotes en estado "listo para venta".
-- La venta nace de un pedido confirmado. El precio por kilo queda fijo al registrarla.
+- La venta nace de un pedido confirmado y se pesa en LIBRAS: peso total en libras y precio por
+  libra, que queda fijo al registrarla. Peso promedio de salida = libras / aves vendidas.
   La venta tiene fecha límite de pago y estado.
 - Venta y entrega son 1:1. La entrega la hace un empleado con cargo de transportista.
 
@@ -107,6 +116,12 @@ Personal
 - Empleados con cargo. Los retirados conservan su historial, pero no se asignan a nuevos registros.
 
 Catálogos (3FN): CategoriaGasto, Cargo, TipoCliente, MetodoPago, TipoAlimento.
+
+Seguimiento y balance
+- No se registran temperatura ni humedad (las condiciones de la zona son favorables).
+- Un lote puede tener varios seguimientos el mismo día en MongoDB.
+- Otros ingresos del lote (por ejemplo, gallinaza) suman en la ganancia.
+  Ganancia neta = ingresos totales - costos totales, por lote.
 
 Fuera del alcance: facturación electrónica DIAN, integración contable, varias sedes o monedas,
 nómina, inventario de medicamentos, básculas o sensores, app móvil, despliegue en producción.

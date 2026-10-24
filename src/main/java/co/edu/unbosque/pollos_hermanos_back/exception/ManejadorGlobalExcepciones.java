@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.dao.DuplicateKeyException;
@@ -46,6 +48,28 @@ public class ManejadorGlobalExcepciones {
 	static final String CHECK_VIOLATION = "23514";
 	/** SQLSTATE de valor nulo en una columna obligatoria. */
 	static final String NOT_NULL_VIOLATION = "23502";
+
+	/**
+	 * Traduce las restricciones con los mensajes de PostgreSQL. Puede faltar (por
+	 * ejemplo en las pruebas de controladores); entonces se usan mensajes
+	 * genéricos.
+	 */
+	private final ObjectProvider<TraductorRestricciones> traductor;
+
+	/** Crea el manejador sin traductor de restricciones. */
+	public ManejadorGlobalExcepciones() {
+		this(null);
+	}
+
+	/**
+	 * Crea el manejador.
+	 *
+	 * @param traductor traductor de restricciones, si está disponible
+	 */
+	@Autowired
+	public ManejadorGlobalExcepciones(ObjectProvider<TraductorRestricciones> traductor) {
+		this.traductor = traductor;
+	}
 
 	/**
 	 * Responde 404 cuando el recurso no existe.
@@ -162,7 +186,9 @@ public class ManejadorGlobalExcepciones {
 	 */
 	@ExceptionHandler(DuplicateKeyException.class)
 	public ResponseEntity<ErrorApiDTO> manejarLlaveDuplicada(DuplicateKeyException e) {
-		return responder(HttpStatus.CONFLICT, "Ya existe un registro con esos datos.");
+		SQLException sql = buscarSQLException(e);
+		String porDefecto = "Ya existe un registro con esos datos.";
+		return responder(HttpStatus.CONFLICT, sql == null ? porDefecto : traducir(sql, porDefecto));
 	}
 
 	/**
@@ -228,14 +254,27 @@ public class ManejadorGlobalExcepciones {
 		}
 		return switch (estado) {
 		case RAISE_EXCEPTION -> responder(HttpStatus.CONFLICT, mensajePostgres(sql));
-		case UNIQUE_VIOLATION -> responder(HttpStatus.CONFLICT, "Ya existe un registro con esos datos.");
-		case FOREIGN_KEY_VIOLATION -> responder(HttpStatus.CONFLICT,
-				"El registro hace referencia a un dato que no existe o tiene datos relacionados que impiden la operación.");
+		case UNIQUE_VIOLATION -> responder(HttpStatus.CONFLICT, traducir(sql, "Ya existe un registro con esos datos."));
+		case FOREIGN_KEY_VIOLATION -> responder(HttpStatus.CONFLICT, traducir(sql,
+				"El registro hace referencia a un dato que no existe o tiene datos relacionados que impiden la operación."));
 		case CHECK_VIOLATION -> responder(HttpStatus.BAD_REQUEST,
-				"Los datos no cumplen una restricción de la base de datos.");
+				traducir(sql, "Los datos no cumplen una restricción de la base de datos."));
 		case NOT_NULL_VIOLATION -> responder(HttpStatus.BAD_REQUEST, "Falta un dato obligatorio.");
 		default -> null;
 		};
+	}
+
+	/**
+	 * Busca el mensaje en español de la restricción violada.
+	 *
+	 * @param sql       excepción original del controlador JDBC
+	 * @param porDefecto mensaje si la restricción no tiene uno registrado
+	 * @return mensaje para el usuario
+	 */
+	private String traducir(SQLException sql, String porDefecto) {
+		TraductorRestricciones t = traductor == null ? null : traductor.getIfAvailable();
+		String mensaje = t == null ? null : t.traducir(sql.getMessage());
+		return mensaje == null ? porDefecto : mensaje;
 	}
 
 	/**

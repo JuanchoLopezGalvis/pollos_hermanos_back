@@ -1,6 +1,5 @@
 package co.edu.unbosque.pollos_hermanos_back.repository;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -22,14 +21,6 @@ public interface SeguimientoCrecimientoRepository extends MongoRepository<Seguim
 	 */
 	List<SeguimientoCrecimiento> findByCodigoLoteOrderByFechaAsc(String codigoLote);
 
-	/**
-	 * Indica si ya hay un seguimiento del lote en esa fecha.
-	 *
-	 * @param codigoLote código del lote
-	 * @param fecha      día del seguimiento
-	 * @return {@code true} si ya existe
-	 */
-	boolean existsByCodigoLoteAndFecha(String codigoLote, LocalDate fecha);
 
 	/**
 	 * Calcula la curva de crecimiento por semana de vida del lote: la semana 1
