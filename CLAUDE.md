@@ -102,15 +102,30 @@ Comercial
 - La venta nace de un pedido confirmado y se pesa en LIBRAS: peso total en libras y precio por
   libra, que queda fijo al registrarla. Peso promedio de salida = libras / aves vendidas.
   La venta tiene fecha límite de pago y estado.
-- Venta y entrega son 1:1. La entrega la hace un empleado con cargo de transportista.
+- Venta y entrega son 1:1. La entrega la hace un empleado con cargo de transportista y va
+  siempre a la dirección que registró el cliente (no se escribe a mano ni se cambia).
 
 Pagos y cartera
-- Pagos parciales con método de pago. Saldo = valor total - pagos.
-- Pago en línea con una pasarela en ambiente de pruebas (sandbox), sin dinero real.
-  El pago solo se registra cuando la pasarela confirma la transacción como aprobada.
+- El ÚNICO medio de pago es Wompi en ambiente de pruebas (sandbox), sin dinero real, y solo lo usa
+  el cliente desde su portal. El personal no registra pagos, solo los consulta. Se admiten abonos.
+  Saldo = valor total - pagos; la venta queda pagada cuando el saldo llega a cero.
+- El pago solo se registra cuando el backend consulta la transacción en Wompi y está aprobada.
+  Llega por dos caminos: el cliente al volver a /pago-resultado y el aviso de Wompi a la ruta pública
+  /pagos-en-linea/eventos (firma verificada con WOMPI_SECRETO_EVENTOS). Ninguno duplica el pago.
   Los datos de tarjeta nunca pasan por el backend.
 - La cartera vencida se calcula con una función y la marca un procedimiento,
   no un trigger, porque depende del paso del tiempo.
+
+Portal de clientes (módulo 8)
+- Los clientes crean su cuenta (o se la crea la finca) e inician sesión SOLO para pedir y pagar.
+  Su usuario tiene únicamente el rol `Cliente`, con el permiso `portal.cliente`; las rutas
+  `/portal/**` filtran siempre por el cliente del usuario autenticado.
+- El cliente pide solo una cantidad de aves. PostgreSQL las toma del lote listo para venta que
+  más tiempo lleva disponible (fecha estimada de venta más antigua) y sigue con el siguiente;
+  si no alcanzan, rechaza el pedido de inmediato. El cliente nunca ve los lotes.
+- Un pedido pendiente ya aparta sus aves. El trabajador lo aprueba y, al pesar, registra la venta
+  con las libras y el precio por libra; entonces el cliente la paga con Wompi desde el portal.
+- Si el documento ya es de un cliente, el registro se rechaza: la finca le crea la cuenta.
 
 Personal
 - Empleados con cargo. Los retirados conservan su historial, pero no se asignan a nuevos registros.

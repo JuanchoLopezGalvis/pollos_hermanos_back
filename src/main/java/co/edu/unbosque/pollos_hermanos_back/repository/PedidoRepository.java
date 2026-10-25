@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import co.edu.unbosque.pollos_hermanos_back.dto.DetallePedidoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.LineaPedidoDTO;
+import co.edu.unbosque.pollos_hermanos_back.dto.PedidoClienteDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.PedidoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroPedidoDTO;
 
@@ -112,5 +113,39 @@ public class PedidoRepository {
 		return detalle.stream()
 				.map(l -> String.format(Locale.ROOT, "{\"idLote\":%d,\"cantidadAves\":%d}", l.idLote(), l.cantidadAves()))
 				.collect(Collectors.joining(",", "[", "]"));
+	}
+
+	/**
+	 * Lista los pedidos de un cliente, del más reciente al más antiguo.
+	 *
+	 * @param idCliente identificador del cliente
+	 * @return pedidos del cliente
+	 */
+	public List<PedidoDTO> obtenerDeCliente(Long idCliente) {
+		return jdbcTemplate.query("SELECT * FROM v_pedido WHERE id_cliente = ? ORDER BY fecha_pedido DESC, id_pedido DESC", MAPEO,
+				idCliente);
+	}
+
+	/**
+	 * Crea el pedido de un cliente del portal. PostgreSQL reparte las aves entre
+	 * los lotes por antigüedad o rechaza el pedido si no alcanzan (D22).
+	 *
+	 * @param idCliente identificador del cliente
+	 * @param dto       cantidad, fecha y observaciones
+	 * @return identificador del pedido
+	 */
+	public Long crearParaCliente(Long idCliente, PedidoClienteDTO dto) {
+		return jdbcTemplate.queryForObject("CALL sp_crear_pedido_cliente(?, ?, ?, ?, NULL)", Long.class, idCliente,
+				dto.cantidadAves(), dto.fechaEstimadaEntrega(), dto.observaciones());
+	}
+
+	/**
+	 * Aves que se pueden pedir en este momento, sin decir de qué lotes.
+	 *
+	 * @return aves libres de los lotes listos para venta
+	 */
+	public int avesLibresVenta() {
+		Integer libres = jdbcTemplate.queryForObject("SELECT fn_aves_libres_venta()", Integer.class);
+		return libres == null ? 0 : libres;
 	}
 }

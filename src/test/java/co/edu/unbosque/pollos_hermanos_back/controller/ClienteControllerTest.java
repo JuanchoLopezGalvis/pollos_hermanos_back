@@ -32,6 +32,7 @@ import co.edu.unbosque.pollos_hermanos_back.security.EvaluadorPermisos;
 import co.edu.unbosque.pollos_hermanos_back.security.JwtUtil;
 import co.edu.unbosque.pollos_hermanos_back.security.SecurityConfig;
 import co.edu.unbosque.pollos_hermanos_back.service.ClienteService;
+import co.edu.unbosque.pollos_hermanos_back.service.CuentaClienteService;
 
 /**
  * Pruebas de {@link ClienteController}.
@@ -47,6 +48,10 @@ class ClienteControllerTest {
 	/** Servicio simulado. */
 	@MockitoBean
 	private ClienteService servicio;
+
+	/** Cuentas de clientes simuladas. */
+	@MockitoBean
+	private CuentaClienteService cuentaClienteService;
 
 	/** Utilidad JWT simulada. */
 	@MockitoBean
@@ -89,5 +94,25 @@ class ClienteControllerTest {
 	void pedidosConsultaClientes() throws Exception {
 		when(servicio.obtenerTodos()).thenReturn(List.of());
 		mockMvc.perform(get("/clientes").with(authentication(con("pedido.gestionar")))).andExpect(status().isOk());
+	}
+
+	/** Crear la cuenta de un cliente exige cliente.gestionar. */
+	@Test
+	void crearCuentaExigeGestionarClientes() throws Exception {
+		mockMvc.perform(post("/clientes/4/cuenta").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"nombreUsuario\":\"asadero\",\"contrasena\":\"Clave123*\"}")
+				.with(authentication(con("pedido.gestionar")))).andExpect(status().isForbidden());
+	}
+
+	/** Quien gestiona clientes les crea la cuenta. */
+	@Test
+	void creaCuentaDelCliente() throws Exception {
+		when(cuentaClienteService.crearCuenta(eq(4L), any())).thenReturn(
+				new ClienteDTO(4L, 2L, "Restaurante", "900123", "Asadero", null, null, "a@b.co", true, 9L, "asadero"));
+
+		mockMvc.perform(post("/clientes/4/cuenta").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"nombreUsuario\":\"asadero\",\"contrasena\":\"Clave123*\"}")
+				.with(authentication(con("cliente.gestionar")))).andExpect(status().isCreated())
+				.andExpect(jsonPath("$.usuario").value("asadero"));
 	}
 }

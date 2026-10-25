@@ -18,7 +18,6 @@ import co.edu.unbosque.pollos_hermanos_back.dto.EntregaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ErrorApiDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.PagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroEntregaDTO;
-import co.edu.unbosque.pollos_hermanos_back.dto.RegistroPagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroVentaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoCarteraDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.VentaDTO;
@@ -34,11 +33,12 @@ import jakarta.validation.Valid;
 
 /**
  * Ventas, pagos, entregas y cartera. Registrar ventas y entregas requiere
- * {@code venta.gestionar}; registrar pagos requiere {@code pago.registrar};
- * consultar requiere alguno de esos permisos o {@code cartera.ver}.
+ * {@code venta.gestionar}; consultar requiere ese permiso, {@code pago.registrar}
+ * o {@code cartera.ver}. El personal no registra pagos: el único medio de pago
+ * es Wompi y solo lo usa el cliente desde su portal (D27).
  */
 @RestController
-@Tag(name = "Ventas, pagos y cartera", description = "Ventas desde pedidos confirmados, pagos parciales, entregas y cartera vencida")
+@Tag(name = "Ventas, pagos y cartera", description = "Ventas desde pedidos confirmados, pagos de los clientes con Wompi, entregas y cartera vencida")
 public class VentaController {
 
 	/** Permiso para consultar. */
@@ -46,9 +46,6 @@ public class VentaController {
 
 	/** Permiso para registrar ventas y entregas. */
 	private static final String GESTIONAR = "@permisos.tiene('venta.gestionar')";
-
-	/** Permiso para registrar pagos. */
-	private static final String PAGAR = "@permisos.tiene('pago.registrar')";
 
 	/** Permiso para la cartera. */
 	private static final String CARTERA = "@permisos.tieneAlguno('cartera.ver', 'pago.registrar')";
@@ -120,23 +117,6 @@ public class VentaController {
 	@GetMapping("/ventas/{id}/pagos")
 	public ResponseEntity<List<PagoDTO>> obtenerPagos(@Parameter(description = "Venta") @PathVariable Long id) {
 		return ResponseEntity.ok(ventaService.obtenerPagos(id));
-	}
-
-	/**
-	 * Registra un pago manual.
-	 *
-	 * @param id  venta
-	 * @param dto método, fecha y monto
-	 * @return la venta con su saldo actualizado
-	 */
-	@Operation(summary = "Registrar pago", description = "Invoca sp_registrar_pago para pagos en efectivo, transferencia o crédito. El monto no puede superar el saldo.")
-	@ApiResponse(responseCode = "201", description = "Pago registrado")
-	@ApiResponse(responseCode = "409", description = "Monto mayor que el saldo o venta pagada", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
-	@PreAuthorize(PAGAR)
-	@PostMapping("/ventas/{id}/pagos")
-	public ResponseEntity<VentaDTO> registrarPago(@Parameter(description = "Venta") @PathVariable Long id,
-			@Valid @RequestBody RegistroPagoDTO dto) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(ventaService.registrarPago(id, dto));
 	}
 
 	/**

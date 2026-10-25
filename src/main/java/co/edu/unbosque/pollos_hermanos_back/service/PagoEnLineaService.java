@@ -7,17 +7,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Clock;
 import java.util.HexFormat;
-import java.util.Optional;
+import java.util.function.LongPredicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import co.edu.unbosque.pollos_hermanos_back.dto.CheckoutPagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.IniciarPagoEnLineaDTO;
-import co.edu.unbosque.pollos_hermanos_back.dto.PagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoPagoEnLineaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.TransaccionPasarelaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.VentaDTO;
@@ -132,16 +132,19 @@ public class PagoEnLineaService {
 	/**
 	 * Confirma un pago al volver de la pasarela. Consulta la transacción en
 	 * Wompi y, si está aprobada, registra el pago en la venta. Es idempotente:
-	 * confirmar dos veces la misma transacción no duplica el pago.
+	 * confirmar dos veces la misma transacción no duplica el pago. Solo acepta
+	 * ventas que pasen el filtro: el portal lo usa para que un cliente no
+	 * confirme ni consulte pagos de ventas ajenas.
 	 *
 	 * @param idTransaccion transacción de la pasarela
+	 * @param ventaPermitida indica si quien confirma puede ver la venta
 	 * @return resultado del pago
 	 */
-	public ResultadoPagoEnLineaDTO confirmar(String idTransaccion) {
+	public ResultadoPagoEnLineaDTO confirmar(String idTransaccion, LongPredicate ventaPermitida) {
 		TransaccionPasarelaDTO t = clientePasarela.consultarTransaccion(idTransaccion.trim());
 		BigDecimal monto = BigDecimal.valueOf(t.montoEnCentavos()).movePointLeft(2);
 		Long idVenta = idVentaDeReferencia(t.referencia());
-		if (idVenta == null || !MONEDA.equals(t.moneda())) {
+		if (idVenta == null || !MONEDA.equals(t.moneda()) || !ventaPermitida.test(idVenta)) {
 			return new ResultadoPagoEnLineaDTO(t.id(), t.estado(), false, null, monto, null,
 					"La transacción no corresponde a un pago de este sistema.");
 		}
@@ -149,14 +152,23 @@ public class PagoEnLineaService {
 			return new ResultadoPagoEnLineaDTO(t.id(), t.estado(), false, idVenta, monto, null, mensajeEstado(t.estado()));
 		}
 
-		Optional<PagoDTO> existente = ventaRepository.buscarPagoPorReferencia(t.id());
-		if (existente.isEmpty()) {
-			ventaRepository.registrarPago(idVenta, "EN_LINEA", null, monto, t.id());
+		boolean yaEstaba = ventaRepository.buscarPagoPorReferencia(t.id()).isPresent();
+		if (!yaEstaba) {
+			try {
+				ventaRepository.registrarPago(idVenta, "EN_LINEA", null, monto, t.id());
+			} catch (DataAccessException e) {
+				// El aviso de Wompi y el regreso del cliente pueden llegar al mismo tiempo:
+				// si el otro ya lo registró, la referencia única lo rechaza y no es un error.
+				if (ventaRepository.buscarPagoPorReferencia(t.id()).isEmpty()) {
+					throw e;
+				}
+				yaEstaba = true;
+			}
 		}
 		BigDecimal saldo = ventaRepository.buscarVenta(idVenta).map(VentaDTO::saldo).orElse(null);
 		return new ResultadoPagoEnLineaDTO(t.id(), t.estado(), true, idVenta, monto, saldo,
-				existente.isEmpty() ? "Pago aprobado y registrado en la venta " + idVenta + "."
-						: "Este pago ya estaba registrado en la venta " + idVenta + ".");
+				yaEstaba ? "Este pago ya estaba registrado en la venta " + idVenta + "."
+						: "Pago aprobado y registrado en la venta " + idVenta + ".");
 	}
 
 	/**

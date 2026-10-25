@@ -54,6 +54,68 @@ Nuevas vistas para el seguimiento por lote y el panel del galpón: `v_lote_resum
 vendidas y consumo de alimento), `v_galpon_ocupacion` y `v_rentabilidad_lote` (costos, ingresos y
 ganancia por lote).
 
+### 1.5 Portal de clientes (aprobado el 25/10/2026)
+
+Los clientes crean su cuenta e inician sesión **solo** para hacer pedidos y pagarlos. Script nuevo:
+`modulo_08_portal_clientes.sql`.
+
+**Flujo**
+
+1. El cliente se registra: nombre, documento, tipo de cliente, teléfono o correo, dirección,
+   nombre de usuario y contraseña. Se crean en una sola transacción su `usuario` (con el rol
+   `Cliente`) y su `cliente`.
+2. El cliente pide **una cantidad de aves** y la fecha deseada de entrega. No ve ni elige lotes.
+3. PostgreSQL reparte el pedido **por antigüedad (FIFO)**: toma las aves libres del lote
+   `LISTO_PARA_VENTA` que más tiempo lleva disponible, y si no alcanza sigue con el siguiente.
+   Si entre todos no alcanza, el pedido **se rechaza de inmediato** con el mensaje
+   "Solo hay N aves disponibles". El pedido queda `PENDIENTE`, con sus lotes ya apartados.
+4. El trabajador revisa el pedido, lo **aprueba** (`CONFIRMADO`) o lo cancela. Al pesar las aves,
+   registra la venta con las libras y el **precio por libra**. Ahí queda el valor a pagar.
+5. El cliente ve en su portal el valor y el saldo de cada venta y **paga con Wompi**, en un solo
+   pago o en abonos. El pago entra por el mismo flujo de pago en línea que ya existe.
+6. Mientras el pedido siga `PENDIENTE`, el cliente puede cancelarlo; así libera las aves.
+
+| # | Decisión | Dónde |
+|---|---|---|
+| D21 | `cliente.id_usuario BIGINT NULL UNIQUE`, con FK a `usuario`. Es una relación 1:1 opcional: los clientes que registra el personal no tienen cuenta. | `modulo_08` |
+| D22 | "El lote que más tiempo lleva disponible" = el de **`fecha_estimada_venta` más antigua**; si empatan, el de menor `id_lote`. No se guarda la fecha en que el lote pasó a `LISTO_PARA_VENTA`. | `fn_repartir_pedido_fifo` |
+| D23 | Los pedidos `PENDIENTE` **también apartan aves** (`fn_aves_comprometidas` hoy solo cuenta los `CONFIRMADO`). Sin este cambio, dos clientes podrían recibir las mismas aves. El procedimiento bloquea los lotes (`FOR UPDATE`) mientras reparte. Esto aplica también a los pedidos que crea el personal. | `modulo_08` |
+| D24 | Rol `Cliente` con un único permiso, `portal.cliente`. Las rutas `/portal/**` exigen ese permiso y filtran **siempre** por el cliente del usuario autenticado: un cliente no puede ver pedidos, ventas ni pagos de otro aunque cambie el id en la URL. Las demás rutas siguen igual, así que un cliente no entra a galpones, lotes, costos, etc. | backend |
+| D25 | Si ya existe un cliente con ese documento, el registro se rechaza con el mensaje "Ya estás registrado como cliente; pide a la finca que active tu cuenta". El personal lo vincula desde la pantalla de clientes creándole la cuenta. Así nadie puede apropiarse de la ficha de otro conociendo su documento. | backend y front |
+| D26 | Se usa el mismo login para todos. Después de iniciar sesión, el cliente va a `/portal` y el personal a su panel. | front |
+
+**Objetos nuevos**
+
+- `fn_repartir_pedido_fifo(p_id_pedido, p_cantidad_aves)`: bloquea los lotes listos para venta,
+  rechaza el pedido si no alcanzan y llena `detalle_pedido` por antigüedad. Es una función (sin
+  COMMIT) para poder probarla dentro de una transacción.
+- `sp_crear_pedido_cliente(p_id_cliente, p_cantidad_aves, p_fecha_estimada_entrega,
+  p_observaciones, OUT p_id_pedido)`: crea el pedido y llama al reparto; hace COMMIT o ROLLBACK.
+- `fn_aves_libres_lote(p_id_lote)` y `fn_aves_libres_venta()`: aves que se pueden pedir. El portal
+  muestra solo el total, nunca los lotes.
+- El registro del cliente no usa procedimiento: el backend crea el `usuario` (JPA) y el `cliente`
+  (INSERT con `id_usuario`) en una sola transacción de Spring, porque un procedimiento con COMMIT
+  no puede participar en ella. Las reglas siguen en la base: `uq_cliente_documento`,
+  `uq_cliente_usuario` y `ck_cliente_contacto`.
+- `v_cliente` agrega al final `id_usuario` y `usuario`. `v_pedido` y `v_venta` no cambian: el
+  portal las consulta filtrando por `id_cliente`.
+
+### 1.6 Pagos solo con Wompi y entrega en la dirección del cliente (25/10/2026)
+
+Script: `modulo_09_pago_en_linea_y_entrega.sql`.
+
+| # | Decisión | Dónde |
+|---|---|---|
+| D27 | **El único medio de pago es Wompi** (`EN_LINEA`) y solo lo usa el cliente desde su portal. Efectivo, transferencia y crédito quedan inactivos en `metodo_pago`, y `fn_trg_pago_validar` rechaza cualquier pago que no sea en línea o que no traiga la referencia de la transacción. El personal ya no registra pagos: solo los consulta. Los pagos anteriores con otros medios se conservan como historial. | `modulo_09`, backend y front |
+| D28 | **La entrega va a la dirección que registró el cliente.** `fn_trg_entrega_direccion` la copia en `entrega.direccion` (queda como constancia) y no deja cambiarla; si el cliente no tiene dirección, la entrega se rechaza. `sp_registrar_entrega` ya no recibe dirección. | `modulo_09` |
+| D29 | `v_venta` agrega al final `direccion_cliente`, para mostrarla al programar la entrega. | `modulo_09` |
+
+| D30 | **Wompi avisa al servidor** (URL de eventos `https://nodoa.tail6f73fd.ts.net/api/pagos-en-linea/eventos`, publicada con Tailscale Funnel). Así el pago se registra aunque el cliente cierre la ventana antes de volver. El backend verifica la firma del aviso con `WOMPI_SECRETO_EVENTOS`, consulta la transacción en Wompi y la registra; recibirla varias veces no la duplica (`uq_pago_referencia`). No cambia el modelo. | backend |
+
+Una venta queda `PAGADA` solo cuando los pagos aprobados por Wompi cubren su valor (`trg_pago_venta`).
+El backend registra un pago solo después de consultar la transacción directamente en Wompi y
+recibir `APPROVED`; un pago rechazado (`DECLINED`) o pendiente no se registra.
+
 ### 1.3 Convenciones
 
 - Nombres de tablas y columnas en `snake_case` y singular, igual que las tablas ya existentes `usuario`, `rol` y `permiso`.

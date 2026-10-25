@@ -9,7 +9,6 @@ import co.edu.unbosque.pollos_hermanos_back.dto.CarteraVencidaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.EntregaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.PagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroEntregaDTO;
-import co.edu.unbosque.pollos_hermanos_back.dto.RegistroPagoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroVentaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoCarteraDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.VentaDTO;
@@ -79,18 +78,6 @@ public class VentaService {
 	public List<PagoDTO> obtenerPagos(Long idVenta) {
 		obtenerVenta(idVenta);
 		return ventaRepository.obtenerPagos(idVenta);
-	}
-
-	/**
-	 * Registra un pago manual (efectivo, transferencia o crédito).
-	 *
-	 * @param idVenta venta
-	 * @param dto     datos del pago
-	 * @return la venta con su saldo actualizado
-	 */
-	public VentaDTO registrarPago(Long idVenta, RegistroPagoDTO dto) {
-		ventaRepository.registrarPago(idVenta, dto.codigoMetodo(), dto.fecha(), dto.monto(), null);
-		return obtenerVenta(idVenta);
 	}
 
 	/**

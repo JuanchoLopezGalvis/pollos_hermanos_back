@@ -238,11 +238,14 @@ SELECT pg_temp.esperar_error('el precio por libra no cambia después de la venta
 SELECT pg_temp.esperar_error('no se cancela un pedido con venta', format($$
     UPDATE pedido SET estado = 'CANCELADO' WHERE id_pedido = %s $$, pg_temp.pedido(1)), 'ya tiene una venta');
 
-SELECT pg_temp.esperar_ok('pago parcial en efectivo (S35)', format($$
-    INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 5000000) $$, pg_temp.venta(1), pg_temp.metodo('EFECTIVO')));
+-- Desde el módulo 9 el único medio de pago es Wompi (EN_LINEA, con su referencia).
+SELECT pg_temp.esperar_ok('pago parcial en línea (S35)', format($$
+    INSERT INTO pago (id_venta, id_metodo_pago, monto, referencia_pasarela) VALUES (%s, %s, 5000000, 'TX-PRUEBA-0') $$,
+    pg_temp.venta(1), pg_temp.metodo('EN_LINEA')));
 SELECT pg_temp.verificar('saldo = valor total - pagos (S37)', fn_saldo_venta(pg_temp.venta(1)) = 8500000);
 SELECT pg_temp.esperar_error('pago mayor que el saldo', format($$
-    INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 8500001) $$, pg_temp.venta(1), pg_temp.metodo('EFECTIVO')),
+    INSERT INTO pago (id_venta, id_metodo_pago, monto, referencia_pasarela) VALUES (%s, %s, 8500001, 'TX-PRUEBA-X') $$,
+    pg_temp.venta(1), pg_temp.metodo('EN_LINEA')),
     'supera el saldo');
 SELECT pg_temp.esperar_error('pago en línea sin referencia de la pasarela', format($$
     INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 100) $$, pg_temp.venta(1), pg_temp.metodo('EN_LINEA')),
@@ -253,7 +256,8 @@ SELECT pg_temp.esperar_ok('pago en línea aprobado con su referencia', format($$
 SELECT pg_temp.verificar('con el saldo en cero la venta queda pagada',
     (SELECT estado = 'PAGADA' FROM venta WHERE id_venta = pg_temp.venta(1)));
 SELECT pg_temp.esperar_error('pago de una venta ya pagada', format($$
-    INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 1) $$, pg_temp.venta(1), pg_temp.metodo('EFECTIVO')),
+    INSERT INTO pago (id_venta, id_metodo_pago, monto, referencia_pasarela) VALUES (%s, %s, 1, 'TX-PRUEBA-Y') $$,
+    pg_temp.venta(1), pg_temp.metodo('EN_LINEA')),
     'ya está pagada');
 
 SELECT pg_temp.esperar_error('entrega a cargo de quien no es transportista (S26)', format($$

@@ -76,26 +76,6 @@ class VentaControllerTest {
 		return new DataIntegrityViolationException("rechazo", new SQLException("ERROR: " + mensaje, "P0001"));
 	}
 
-	/** Un pago con método en línea no entra por el pago manual. */
-	@Test
-	void pagoManualEnLineaResponde400() throws Exception {
-		mockMvc.perform(post("/ventas/7/pagos").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"codigoMetodo\":\"EN_LINEA\",\"monto\":1000}")
-				.with(authentication(con("pago.registrar")))).andExpect(status().isBadRequest());
-	}
-
-	/** Un pago mayor que el saldo responde 409 con el mensaje del trigger. */
-	@Test
-	void pagoMayorQueSaldoResponde409() throws Exception {
-		String mensaje = "El pago (9000000) supera el saldo pendiente de la venta 7 (8500000.00).";
-		when(servicio.registrarPago(eq(7L), any())).thenThrow(rechazo(mensaje));
-
-		mockMvc.perform(post("/ventas/7/pagos").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"codigoMetodo\":\"EFECTIVO\",\"monto\":9000000}")
-				.with(authentication(con("pago.registrar"))))
-				.andExpect(status().isConflict()).andExpect(jsonPath("$.mensaje").value(mensaje));
-	}
-
 	/** La cartera vencida se consulta con cartera.ver, pero no permite registrar ventas. */
 	@Test
 	void carteraNoRegistraVentas() throws Exception {
@@ -104,5 +84,20 @@ class VentaControllerTest {
 		mockMvc.perform(post("/ventas").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"idPedido\":1,\"pesoTotalLibras\":576,\"precioLibra\":9000}")
 				.with(authentication(con("cartera.ver")))).andExpect(status().isForbidden());
+	}
+
+	/** El personal ya no registra pagos: el único medio es Wompi, desde el portal del cliente. */
+	@Test
+	void elPersonalNoRegistraPagos() throws Exception {
+		mockMvc.perform(post("/ventas/7/pagos").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"codigoMetodo\":\"EFECTIVO\",\"monto\":1000}")
+				.with(authentication(con("pago.registrar", "venta.gestionar")))).andExpect(status().isMethodNotAllowed());
+	}
+
+	/** Una ruta que no existe responde 404, no 500. */
+	@Test
+	void rutaInexistenteResponde404() throws Exception {
+		mockMvc.perform(post("/pagos-en-linea/ventas/7").contentType(MediaType.APPLICATION_JSON).content("{}")
+				.with(authentication(con("pago.registrar")))).andExpect(status().isNotFound());
 	}
 }

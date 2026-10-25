@@ -18,10 +18,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import co.edu.unbosque.pollos_hermanos_back.dto.ErrorApiDTO;
 
@@ -175,6 +177,29 @@ public class ManejadorGlobalExcepciones {
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<ErrorApiDTO> manejarTipoParametro(MethodArgumentTypeMismatchException e) {
 		return responder(HttpStatus.BAD_REQUEST, "El parámetro '" + e.getName() + "' no tiene un formato válido.");
+	}
+
+	/**
+	 * Responde 405 cuando la ruta existe pero no admite ese método HTTP, por
+	 * ejemplo un POST de pago en una ruta que solo permite consultar.
+	 *
+	 * @param e excepción de método no soportado
+	 * @return respuesta 405
+	 */
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<ErrorApiDTO> manejarMetodoNoSoportado(HttpRequestMethodNotSupportedException e) {
+		return responder(HttpStatus.METHOD_NOT_ALLOWED, "La operación " + e.getMethod() + " no está permitida en esta ruta.");
+	}
+
+	/**
+	 * Responde 404 cuando la ruta no existe.
+	 *
+	 * @param e excepción de recurso inexistente
+	 * @return respuesta 404
+	 */
+	@ExceptionHandler(NoResourceFoundException.class)
+	public ResponseEntity<ErrorApiDTO> manejarRutaInexistente(NoResourceFoundException e) {
+		return responder(HttpStatus.NOT_FOUND, "La ruta /" + e.getResourcePath() + " no existe.");
 	}
 
 	/**

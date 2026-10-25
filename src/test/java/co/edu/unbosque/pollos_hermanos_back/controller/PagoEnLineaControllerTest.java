@@ -1,37 +1,28 @@
 package co.edu.unbosque.pollos_hermanos_back.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import co.edu.unbosque.pollos_hermanos_back.UsuariosDePrueba;
-import co.edu.unbosque.pollos_hermanos_back.dto.*;
+import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoPagoEnLineaDTO;
 import co.edu.unbosque.pollos_hermanos_back.security.EvaluadorPermisos;
 import co.edu.unbosque.pollos_hermanos_back.security.JwtUtil;
 import co.edu.unbosque.pollos_hermanos_back.security.SecurityConfig;
-import co.edu.unbosque.pollos_hermanos_back.service.PagoEnLineaService;
+import co.edu.unbosque.pollos_hermanos_back.service.EventosWompiService;
 
 /**
  * Pruebas de {@link PagoEnLineaController}.
@@ -46,7 +37,7 @@ class PagoEnLineaControllerTest {
 
 	/** Servicio simulado. */
 	@MockitoBean
-	private PagoEnLineaService servicio;
+	private EventosWompiService servicio;
 
 	/** Utilidad JWT simulada. */
 	@MockitoBean
@@ -56,50 +47,22 @@ class PagoEnLineaControllerTest {
 	@MockitoBean
 	private UserDetailsService userDetailsService;
 
-	/**
-	 * Autenticación con los permisos indicados.
-	 *
-	 * @param permisos códigos de permiso
-	 * @return autenticación de prueba
-	 */
-	private static Authentication con(String... permisos) {
-		return UsuariosDePrueba.autenticacion(UsuariosDePrueba.conPermisos(permisos));
-	}
-
-	/**
-	 * Error de PostgreSQL lanzado por un {@code RAISE EXCEPTION}.
-	 *
-	 * @param mensaje mensaje del procedimiento o trigger
-	 * @return excepción como la traduce Spring
-	 */
-	private static DataIntegrityViolationException rechazo(String mensaje) {
-		return new DataIntegrityViolationException("rechazo", new SQLException("ERROR: " + mensaje, "P0001"));
-	}
-
-	/** Iniciar un pago devuelve la URL del checkout. */
+	/** Wompi llama sin token: la ruta es pública y registra el pago aprobado. */
 	@Test
-	void iniciaPago() throws Exception {
-		when(servicio.iniciar(eq(7L), any())).thenReturn(new CheckoutPagoDTO("https://checkout.wompi.co/p/?x", "PH-V7-1", 100L, "COP"));
+	void wompiAvisaSinToken() throws Exception {
+		when(servicio.procesar(any())).thenReturn(new ResultadoPagoEnLineaDTO("tx-1", "APPROVED", true, 7L,
+				new BigDecimal("44900"), BigDecimal.ZERO, "Pago aprobado y registrado en la venta 7."));
 
-		mockMvc.perform(post("/pagos-en-linea/ventas/7").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"monto\":1,\"urlRetorno\":\"http://localhost/pago-resultado\"}")
-				.with(authentication(con("pago.registrar"))))
-				.andExpect(status().isOk()).andExpect(jsonPath("$.referencia").value("PH-V7-1"));
+		mockMvc.perform(post("/pagos-en-linea/eventos").contentType(MediaType.APPLICATION_JSON).content("{\"event\":\"transaction.updated\"}"))
+				.andExpect(status().isOk()).andExpect(jsonPath("$.registrado").value(true));
 	}
 
-	/** Una URL de retorno que no es http no pasa la validación. */
+	/** Un aviso con firma falsa responde 403. */
 	@Test
-	void urlRetornoInvalidaResponde400() throws Exception {
-		mockMvc.perform(post("/pagos-en-linea/ventas/7").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"monto\":1,\"urlRetorno\":\"javascript:alert(1)\"}")
-				.with(authentication(con("pago.registrar")))).andExpect(status().isBadRequest());
-	}
+	void firmaFalsaResponde403() throws Exception {
+		when(servicio.procesar(any())).thenThrow(new AccessDeniedException("La firma del aviso no corresponde a Wompi."));
 
-	/** Sin pago.registrar no se confirma un pago. */
-	@Test
-	void sinPermisoResponde403() throws Exception {
-		mockMvc.perform(post("/pagos-en-linea/confirmar").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"idTransaccion\":\"tx-1\"}").with(authentication(con("cartera.ver"))))
+		mockMvc.perform(post("/pagos-en-linea/eventos").contentType(MediaType.APPLICATION_JSON).content("{}"))
 				.andExpect(status().isForbidden());
 	}
 }

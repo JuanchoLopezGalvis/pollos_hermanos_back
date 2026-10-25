@@ -41,9 +41,12 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-	/** Rutas que no requieren token: documentación, errores y autenticación. */
-	private static final String[] RUTAS_PUBLICAS = { "/auth/**", "/swagger-ui.html", "/swagger-ui/**",
-			"/v3/api-docs/**", "/error" };
+	/**
+	 * Rutas que no requieren token: documentación, errores, autenticación y los
+	 * avisos de Wompi (que se validan con su firma).
+	 */
+	private static final String[] RUTAS_PUBLICAS = { "/auth/**", "/pagos-en-linea/eventos", "/swagger-ui.html",
+			"/swagger-ui/**", "/v3/api-docs/**", "/error" };
 
 	/**
 	 * Define la cadena de filtros de seguridad.

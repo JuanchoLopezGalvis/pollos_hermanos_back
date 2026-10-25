@@ -58,7 +58,7 @@ class PagoEnLineaServiceTest {
 	private static VentaDTO venta(String saldo) {
 		return new VentaDTO(7L, 3L, 1L, "Asadero", LocalDate.of(2026, 10, 20), 100, new BigDecimal("600"),
 				new BigDecimal("9000"), new BigDecimal("5400000"), BigDecimal.ZERO, new BigDecimal(saldo),
-				LocalDate.of(2026, 11, 20), "PENDIENTE_PAGO", false, null, null);
+				LocalDate.of(2026, 11, 20), "PENDIENTE_PAGO", false, null, null, "Calle 1");
 	}
 
 	/** El checkout lleva la firma de integridad SHA-256 de referencia, monto, moneda y secreto. */
@@ -103,7 +103,7 @@ class PagoEnLineaServiceTest {
 		when(ventaRepository.buscarPagoPorReferencia("tx-1")).thenReturn(Optional.empty());
 		when(ventaRepository.buscarVenta(7L)).thenReturn(Optional.of(venta("5250000")));
 
-		ResultadoPagoEnLineaDTO resultado = servicio.confirmar("tx-1");
+		ResultadoPagoEnLineaDTO resultado = servicio.confirmar("tx-1", idVenta -> true);
 
 		assertTrue(resultado.registrado());
 		verify(ventaRepository).registrarPago(7L, "EN_LINEA", null, new BigDecimal("150000.00"), "tx-1");
@@ -118,7 +118,7 @@ class PagoEnLineaServiceTest {
 				.thenReturn(Optional.of(new PagoDTO(1L, 7L, LocalDate.now(), new BigDecimal("150000"), "EN_LINEA", "En línea", "tx-1")));
 		when(ventaRepository.buscarVenta(7L)).thenReturn(Optional.of(venta("5250000")));
 
-		assertTrue(servicio.confirmar("tx-1").registrado());
+		assertTrue(servicio.confirmar("tx-1", idVenta -> true).registrado());
 		verify(ventaRepository, never()).registrarPago(anyLong(), anyString(), any(), any(), anyString());
 	}
 
@@ -128,7 +128,7 @@ class PagoEnLineaServiceTest {
 		when(pasarela.consultarTransaccion("tx-2"))
 				.thenReturn(new TransaccionPasarelaDTO("tx-2", "DECLINED", "PH-V7-1700000000000", 100L, "COP"));
 
-		ResultadoPagoEnLineaDTO resultado = servicio.confirmar("tx-2");
+		ResultadoPagoEnLineaDTO resultado = servicio.confirmar("tx-2", idVenta -> true);
 
 		assertFalse(resultado.registrado());
 		verify(ventaRepository, never()).registrarPago(anyLong(), anyString(), any(), any(), anyString());
@@ -139,5 +139,35 @@ class PagoEnLineaServiceTest {
 	void referenciaAjenaNoIdentificaVenta() {
 		assertEquals(7L, PagoEnLineaService.idVentaDeReferencia("PH-V7-123"));
 		assertNull(PagoEnLineaService.idVentaDeReferencia("OTRA-7"));
+	}
+
+	/** Un pago de una venta que el filtro no permite (de otro cliente) no se registra. */
+	@Test
+	void confirmarConFiltroNoRegistraVentasAjenas() {
+		when(pasarela.consultarTransaccion("tx-1"))
+				.thenReturn(new TransaccionPasarelaDTO("tx-1", "APPROVED", "PH-V7-1700000000000", 15_000_000L, "COP"));
+
+		ResultadoPagoEnLineaDTO r = servicio.confirmar("tx-1", idVenta -> false);
+
+		assertFalse(r.registrado());
+		assertNull(r.idVenta());
+		verify(ventaRepository, never()).registrarPago(anyLong(), anyString(), any(), any(), anyString());
+	}
+
+	/** Si el aviso de Wompi y el cliente confirman a la vez, el segundo encuentra el pago y no falla. */
+	@Test
+	void confirmacionSimultaneaNoFalla() {
+		when(pasarela.consultarTransaccion("tx-1"))
+				.thenReturn(new TransaccionPasarelaDTO("tx-1", "APPROVED", "PH-V7-1700000000000", 15_000_000L, "COP"));
+		when(ventaRepository.buscarPagoPorReferencia("tx-1")).thenReturn(Optional.empty(),
+				Optional.of(new PagoDTO(1L, 7L, LocalDate.now(), new BigDecimal("150000"), "EN_LINEA", "Pago en línea", "tx-1")));
+		when(ventaRepository.registrarPago(anyLong(), anyString(), any(), any(), anyString()))
+				.thenThrow(new org.springframework.dao.DataIntegrityViolationException("uq_pago_referencia"));
+		when(ventaRepository.buscarVenta(7L)).thenReturn(Optional.of(venta("0")));
+
+		ResultadoPagoEnLineaDTO r = servicio.confirmar("tx-1", idVenta -> true);
+
+		assertTrue(r.registrado());
+		assertEquals("Este pago ya estaba registrado en la venta 7.", r.mensaje());
 	}
 }

@@ -31,7 +31,7 @@ class ClienteServiceTest {
 		RegistroClienteDTO dto = new RegistroClienteDTO(2L, "900123", "Asadero", null, "3001112233", null, null);
 		when(clienteRepository.crear(dto)).thenReturn(4L);
 		when(clienteRepository.buscar(4L)).thenReturn(Optional.of(
-				new ClienteDTO(4L, 2L, "Restaurante", "900123", "Asadero", null, "3001112233", null, true)));
+				new ClienteDTO(4L, 2L, "Restaurante", "900123", "Asadero", null, "3001112233", null, true, null, null)));
 
 		assertEquals("Restaurante", clienteService.crear(dto).tipoCliente());
 	}

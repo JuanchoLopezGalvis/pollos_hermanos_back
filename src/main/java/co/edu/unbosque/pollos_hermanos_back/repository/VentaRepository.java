@@ -145,8 +145,8 @@ public class VentaRepository {
 	 * @return identificador de la entrega
 	 */
 	public Long registrarEntrega(Long idVenta, RegistroEntregaDTO dto) {
-		return jdbcTemplate.queryForObject("CALL sp_registrar_entrega(?, ?, ?, ?, NULL)", Long.class, idVenta, dto.idEmpleado(),
-				dto.direccion(), dto.observaciones());
+		return jdbcTemplate.queryForObject("CALL sp_registrar_entrega(?, ?, ?, NULL)", Long.class, idVenta, dto.idEmpleado(),
+				dto.observaciones());
 	}
 
 	/**
@@ -185,5 +185,16 @@ public class VentaRepository {
 	 */
 	public List<VentasClienteDTO> obtenerVentasPorCliente() {
 		return jdbcTemplate.query("SELECT * FROM v_ventas_por_cliente ORDER BY valor_vendido DESC, cliente", MAPEO_CLIENTE);
+	}
+
+	/**
+	 * Lista las ventas de un cliente, de la más reciente a la más antigua.
+	 *
+	 * @param idCliente identificador del cliente
+	 * @return ventas del cliente con su saldo
+	 */
+	public List<VentaDTO> obtenerVentasDeCliente(Long idCliente) {
+		return jdbcTemplate.query("SELECT * FROM v_venta WHERE id_cliente = ? ORDER BY fecha_venta DESC, id_venta DESC",
+				MAPEO_VENTA, idCliente);
 	}
 }

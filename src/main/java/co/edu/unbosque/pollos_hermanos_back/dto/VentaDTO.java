@@ -25,5 +25,6 @@ import java.time.LocalDate;
  */
 public record VentaDTO(Long idVenta, Long idPedido, Long idCliente, String cliente, LocalDate fechaVenta, Integer cantidadAves,
 		BigDecimal pesoTotalLibras, BigDecimal precioLibra, BigDecimal valorTotal, BigDecimal pagado, BigDecimal saldo,
-		LocalDate fechaLimitePago, String estado, Boolean vencida, Long idEntrega, String estadoEntrega) {
+		LocalDate fechaLimitePago, String estado, Boolean vencida, Long idEntrega, String estadoEntrega,
+		String direccionCliente) {
 }

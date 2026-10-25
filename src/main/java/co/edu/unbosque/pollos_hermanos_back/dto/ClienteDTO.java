@@ -12,7 +12,9 @@ package co.edu.unbosque.pollos_hermanos_back.dto;
  * @param telefono      teléfono
  * @param correo        correo
  * @param activo        {@code false} si ya no compra
+ * @param idUsuario     usuario con el que entra al portal, o {@code null} si no tiene cuenta
+ * @param usuario       nombre de ese usuario
  */
 public record ClienteDTO(Long idCliente, Long idTipoCliente, String tipoCliente, String documento, String nombre,
-		String direccion, String telefono, String correo, Boolean activo) {
+		String direccion, String telefono, String correo, Boolean activo, Long idUsuario, String usuario) {
 }

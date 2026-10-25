@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import co.edu.unbosque.pollos_hermanos_back.dto.ClienteDTO;
+import co.edu.unbosque.pollos_hermanos_back.dto.CuentaClienteDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ErrorApiDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroClienteDTO;
 import co.edu.unbosque.pollos_hermanos_back.service.ClienteService;
+import co.edu.unbosque.pollos_hermanos_back.service.CuentaClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -43,13 +45,18 @@ public class ClienteController {
 	/** Servicio de clientes. */
 	private final ClienteService clienteService;
 
+	/** Cuentas de los clientes para el portal. */
+	private final CuentaClienteService cuentaClienteService;
+
 	/**
 	 * Crea el controlador.
 	 *
-	 * @param clienteService servicio de clientes
+	 * @param clienteService       servicio de clientes
+	 * @param cuentaClienteService cuentas de los clientes
 	 */
-	public ClienteController(ClienteService clienteService) {
+	public ClienteController(ClienteService clienteService, CuentaClienteService cuentaClienteService) {
 		this.clienteService = clienteService;
+		this.cuentaClienteService = cuentaClienteService;
 	}
 
 	/**
@@ -96,5 +103,23 @@ public class ClienteController {
 	public ResponseEntity<ClienteDTO> actualizar(@Parameter(description = "Identificador") @PathVariable Long id,
 			@Valid @RequestBody RegistroClienteDTO dto) {
 		return ResponseEntity.ok(clienteService.actualizar(id, dto));
+	}
+
+	/**
+	 * Crea la cuenta del portal para un cliente ya registrado (D25).
+	 *
+	 * @param id  identificador del cliente
+	 * @param dto usuario, contraseña inicial y correo
+	 * @return el cliente con su cuenta
+	 */
+	@Operation(summary = "Crear cuenta del cliente", description = "El usuario recibe solo el rol Cliente: entra únicamente al portal para pedir y pagar.")
+	@ApiResponse(responseCode = "201", description = "Cuenta creada")
+	@ApiResponse(responseCode = "404", description = "El cliente no existe", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@ApiResponse(responseCode = "409", description = "Ya tiene cuenta, falta el correo o el usuario ya existe", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@PreAuthorize(GESTIONAR)
+	@PostMapping("/{id}/cuenta")
+	public ResponseEntity<ClienteDTO> crearCuenta(@Parameter(description = "Identificador del cliente") @PathVariable Long id,
+			@Valid @RequestBody CuentaClienteDTO dto) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(cuentaClienteService.crearCuenta(id, dto));
 	}
 }

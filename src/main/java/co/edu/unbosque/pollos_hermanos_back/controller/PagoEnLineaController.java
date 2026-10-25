@@ -1,80 +1,59 @@
 package co.edu.unbosque.pollos_hermanos_back.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import co.edu.unbosque.pollos_hermanos_back.dto.CheckoutPagoDTO;
-import co.edu.unbosque.pollos_hermanos_back.dto.ConfirmacionPagoEnLineaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ErrorApiDTO;
-import co.edu.unbosque.pollos_hermanos_back.dto.IniciarPagoEnLineaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoPagoEnLineaDTO;
-import co.edu.unbosque.pollos_hermanos_back.service.PagoEnLineaService;
+import co.edu.unbosque.pollos_hermanos_back.service.EventosWompiService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 /**
- * Pago en línea con la pasarela en ambiente de pruebas. Requiere
- * {@code pago.registrar}.
+ * Avisos de Wompi. Es una ruta pública porque la llama Wompi, no un usuario:
+ * en lugar del token se verifica la firma del aviso. Los pagos los inicia el
+ * cliente desde {@code /portal}.
  */
 @RestController
 @RequestMapping("/pagos-en-linea")
-@Tag(name = "Pago en línea", description = "Checkout de Wompi en sandbox: sin dinero real y sin datos de tarjeta en el sistema")
+@Tag(name = "Pago en línea", description = "Avisos de Wompi (sandbox) cuando cambia una transacción")
 public class PagoEnLineaController {
 
-	/** Permiso para pagar. */
-	private static final String PAGAR = "@permisos.tiene('pago.registrar')";
-
-	/** Servicio de pago en línea. */
-	private final PagoEnLineaService pagoEnLineaService;
+	/** Procesa los avisos de Wompi. */
+	private final EventosWompiService eventosWompiService;
 
 	/**
 	 * Crea el controlador.
 	 *
-	 * @param pagoEnLineaService servicio de pago en línea
+	 * @param eventosWompiService avisos de Wompi
 	 */
-	public PagoEnLineaController(PagoEnLineaService pagoEnLineaService) {
-		this.pagoEnLineaService = pagoEnLineaService;
+	public PagoEnLineaController(EventosWompiService eventosWompiService) {
+		this.eventosWompiService = eventosWompiService;
 	}
 
 	/**
-	 * Prepara el checkout para pagar una venta.
+	 * Recibe el aviso de Wompi de una transacción actualizada y registra el pago
+	 * si quedó aprobada.
 	 *
-	 * @param idVenta venta
-	 * @param dto     monto y URL de retorno
-	 * @return URL firmada del checkout
+	 * @param evento cuerpo del aviso
+	 * @return resultado del pago; vacío si el evento no es de una transacción
 	 */
-	@Operation(summary = "Iniciar pago en línea", description = "Devuelve la URL firmada del checkout de Wompi. El monto no puede superar el saldo.")
-	@ApiResponse(responseCode = "200", description = "Checkout listo")
-	@ApiResponse(responseCode = "409", description = "Pasarela sin configurar, venta pagada o monto mayor que el saldo", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
-	@PreAuthorize(PAGAR)
-	@PostMapping("/ventas/{idVenta}")
-	public ResponseEntity<CheckoutPagoDTO> iniciar(@Parameter(description = "Venta") @PathVariable Long idVenta,
-			@Valid @RequestBody IniciarPagoEnLineaDTO dto) {
-		return ResponseEntity.ok(pagoEnLineaService.iniciar(idVenta, dto));
-	}
-
-	/**
-	 * Confirma un pago al volver de la pasarela.
-	 *
-	 * @param dto transacción devuelta por la pasarela
-	 * @return resultado del pago
-	 */
-	@Operation(summary = "Confirmar pago en línea", description = "Consulta la transacción directamente en Wompi y, si está aprobada, la registra con sp_registrar_pago. Confirmar dos veces no duplica el pago.")
-	@ApiResponse(responseCode = "200", description = "Resultado del pago")
-	@ApiResponse(responseCode = "409", description = "No se pudo consultar la pasarela o la base de datos rechazó el pago", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
-	@PreAuthorize(PAGAR)
-	@PostMapping("/confirmar")
-	public ResponseEntity<ResultadoPagoEnLineaDTO> confirmar(@Valid @RequestBody ConfirmacionPagoEnLineaDTO dto) {
-		return ResponseEntity.ok(pagoEnLineaService.confirmar(dto.idTransaccion()));
+	@Operation(summary = "Aviso de Wompi", description = "URL de eventos configurada en el panel de Wompi. Verifica la firma con WOMPI_SECRETO_EVENTOS, consulta la transacción en Wompi y registra el pago si está aprobada. Recibirlo varias veces no duplica el pago.")
+	@ApiResponse(responseCode = "200", description = "Aviso procesado")
+	@ApiResponse(responseCode = "403", description = "La firma no corresponde a Wompi", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@SecurityRequirements
+	@PostMapping("/eventos")
+	public ResponseEntity<ResultadoPagoEnLineaDTO> recibirEvento(@RequestBody Map<String, Object> evento) {
+		ResultadoPagoEnLineaDTO resultado = eventosWompiService.procesar(evento);
+		return resultado == null ? ResponseEntity.ok().build() : ResponseEntity.ok(resultado);
 	}
 }
