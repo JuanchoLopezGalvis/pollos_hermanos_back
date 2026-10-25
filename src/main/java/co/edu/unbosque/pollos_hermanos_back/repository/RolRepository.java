@@ -2,6 +2,7 @@ package co.edu.unbosque.pollos_hermanos_back.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -19,4 +20,12 @@ public interface RolRepository extends JpaRepository<Rol, Long> {
 	 * @return roles encontrados
 	 */
 	List<Rol> findByNombreIn(Collection<String> nombres);
+
+	/**
+	 * Busca un rol por su nombre.
+	 *
+	 * @param nombre nombre del rol
+	 * @return el rol, si existe
+	 */
+	Optional<Rol> findByNombre(String nombre);
 }

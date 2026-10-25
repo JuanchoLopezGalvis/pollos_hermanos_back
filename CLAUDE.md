@@ -57,15 +57,23 @@ Convenciones:
   van solo en PostgreSQL. MongoDB solo guarda el seguimiento del crecimiento.
 - Antes de guardar un documento en MongoDB, verificar en PostgreSQL que el lote existe y está activo.
   La edad del lote se calcula con su fecha de ingreso en PostgreSQL.
-- El modelo relacional todavía está en diseño (Fase 1). No inventes tablas ni columnas:
-  si falta una definición, pregunta antes de crearla.
+- El modelo relacional aprobado está en `docs/modelo_relacional.md`. No inventes tablas ni columnas
+  fuera de ese documento: si falta una definición, pregunta antes de crearla.
+- Cada módulo tiene su script en `sql/modulo_NN_*.sql` (se ejecuta como superusuario y deja los
+  objetos a nombre de `pollos_owner`) y sus pruebas en `sql/pruebas/`. Se instala con
+  `./instalar_bd.sh modulo_NN_*.sql`.
+- La base real tiene `ALTER DEFAULT PRIVILEGES` que da SELECT, INSERT, UPDATE y DELETE a
+  `pollos_app` en toda tabla nueva. Cada script de módulo debe hacer `REVOKE ALL ... FROM pollos_app`
+  antes de sus `GRANT`, para que la aplicación no pueda borrar lo que no debe.
 
 ## Reglas del negocio
 
 Lotes y galpones
 - Cada galpón tiene capacidad máxima y estado (disponible, ocupado, en mantenimiento).
-- Un galpón aloja un solo lote activo a la vez.
-- Estados del lote: en engorde, listo para venta, vendido, cerrado. Ciclo de 40 a 50 días.
+- Producción escalonada: un galpón aloja VARIOS lotes a la vez (entra uno nuevo cada semana).
+  La suma de aves vivas de sus lotes activos no supera la capacidad. Cada lote se sigue por separado.
+- Estados del lote: en engorde, listo para venta, vendido, cerrado. Engorde de 35 a 45 días
+  (venta estimada por defecto: ingreso + 40).
 - Aves disponibles = cantidad inicial - mortalidad registrada - aves vendidas.
 - Mortalidad de referencia: 5% por lote. El usuario registra la mortalidad real cada día;
   el sistema alerta cuando la acumulada supera el 5%.
@@ -91,22 +99,44 @@ Costos
 Comercial
 - Un pedido puede tomar aves de varios lotes (`DetallePedido`, relación N:M);
   solo se piden aves de lotes en estado "listo para venta".
-- La venta nace de un pedido confirmado. El precio por kilo queda fijo al registrarla.
+- La venta nace de un pedido confirmado y se pesa en LIBRAS: peso total en libras y precio por
+  libra, que queda fijo al registrarla. Peso promedio de salida = libras / aves vendidas.
   La venta tiene fecha límite de pago y estado.
-- Venta y entrega son 1:1. La entrega la hace un empleado con cargo de transportista.
+- Venta y entrega son 1:1. La entrega la hace un empleado con cargo de transportista y va
+  siempre a la dirección que registró el cliente (no se escribe a mano ni se cambia).
 
 Pagos y cartera
-- Pagos parciales con método de pago. Saldo = valor total - pagos.
-- Pago en línea con una pasarela en ambiente de pruebas (sandbox), sin dinero real.
-  El pago solo se registra cuando la pasarela confirma la transacción como aprobada.
+- El ÚNICO medio de pago es Wompi en ambiente de pruebas (sandbox), sin dinero real, y solo lo usa
+  el cliente desde su portal. El personal no registra pagos, solo los consulta. Se admiten abonos.
+  Saldo = valor total - pagos; la venta queda pagada cuando el saldo llega a cero.
+- El pago solo se registra cuando el backend consulta la transacción en Wompi y está aprobada.
+  Llega por dos caminos: el cliente al volver a /pago-resultado y el aviso de Wompi a la ruta pública
+  /pagos-en-linea/eventos (firma verificada con WOMPI_SECRETO_EVENTOS). Ninguno duplica el pago.
   Los datos de tarjeta nunca pasan por el backend.
 - La cartera vencida se calcula con una función y la marca un procedimiento,
   no un trigger, porque depende del paso del tiempo.
+
+Portal de clientes (módulo 8)
+- Los clientes crean su cuenta (o se la crea la finca) e inician sesión SOLO para pedir y pagar.
+  Su usuario tiene únicamente el rol `Cliente`, con el permiso `portal.cliente`; las rutas
+  `/portal/**` filtran siempre por el cliente del usuario autenticado.
+- El cliente pide solo una cantidad de aves. PostgreSQL las toma del lote listo para venta que
+  más tiempo lleva disponible (fecha estimada de venta más antigua) y sigue con el siguiente;
+  si no alcanzan, rechaza el pedido de inmediato. El cliente nunca ve los lotes.
+- Un pedido pendiente ya aparta sus aves. El trabajador lo aprueba y, al pesar, registra la venta
+  con las libras y el precio por libra; entonces el cliente la paga con Wompi desde el portal.
+- Si el documento ya es de un cliente, el registro se rechaza: la finca le crea la cuenta.
 
 Personal
 - Empleados con cargo. Los retirados conservan su historial, pero no se asignan a nuevos registros.
 
 Catálogos (3FN): CategoriaGasto, Cargo, TipoCliente, MetodoPago, TipoAlimento.
+
+Seguimiento y balance
+- No se registran temperatura ni humedad (las condiciones de la zona son favorables).
+- Un lote puede tener varios seguimientos el mismo día en MongoDB.
+- Otros ingresos del lote (por ejemplo, gallinaza) suman en la ganancia.
+  Ganancia neta = ingresos totales - costos totales, por lote.
 
 Fuera del alcance: facturación electrónica DIAN, integración contable, varias sedes o monedas,
 nómina, inventario de medicamentos, básculas o sensores, app móvil, despliegue en producción.

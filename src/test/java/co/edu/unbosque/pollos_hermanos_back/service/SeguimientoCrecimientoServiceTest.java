@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -103,13 +104,16 @@ class SeguimientoCrecimientoServiceTest {
 		verify(repositorio, never()).save(any());
 	}
 
-	/** No se permiten dos seguimientos del mismo lote el mismo día. */
+	/** Se permiten varios seguimientos del mismo lote el mismo día. */
 	@Test
-	void rechazaSeguimientoDuplicadoDelMismoDia() {
-		when(repositorio.existsByCodigoLoteAndFecha("L-001", LocalDate.of(2026, 10, 8))).thenReturn(true);
+	void permiteVariosSeguimientosElMismoDia() {
+		when(verificadorLote.obtenerFechaIngresoLoteActivo("L-001")).thenReturn(LocalDate.of(2026, 10, 1));
+		when(repositorio.save(any(SeguimientoCrecimiento.class))).thenAnswer(invocacion -> invocacion.getArgument(0));
 
-		assertThrows(ReglaNegocioException.class, () -> servicio.crear(seguimiento(LocalDate.of(2026, 10, 8))));
-		verify(repositorio, never()).save(any());
+		servicio.crear(seguimiento(LocalDate.of(2026, 10, 8)));
+		servicio.crear(seguimiento(LocalDate.of(2026, 10, 8)));
+
+		verify(repositorio, times(2)).save(any(SeguimientoCrecimiento.class));
 	}
 
 	/** Actualizar no cambia el lote ni la fecha. */

@@ -57,6 +57,17 @@ public class AuthService {
 		Usuario usuario = (Usuario) autenticacion.getPrincipal();
 		usuario.setUltimoIngreso(LocalDateTime.now());
 		usuarioRepository.save(usuario);
+		return emitirToken(usuario);
+	}
+
+	/**
+	 * Genera el token y la respuesta de sesión de un usuario ya autenticado,
+	 * por ejemplo el cliente que acaba de crear su cuenta.
+	 *
+	 * @param usuario usuario con sus roles cargados
+	 * @return token, datos del usuario y sus permisos
+	 */
+	public TokenDTO emitirToken(Usuario usuario) {
 		return new TokenDTO(jwtUtil.generarToken(usuario.getNombreUsuario()), "Bearer", usuario.getNombreUsuario(),
 				usuario.obtenerNombreCompleto(), usuario.isSuperusuario(), usuario.obtenerTodosLosPermisos());
 	}

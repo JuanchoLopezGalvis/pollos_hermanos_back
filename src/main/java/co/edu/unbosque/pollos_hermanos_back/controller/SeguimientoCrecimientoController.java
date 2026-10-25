@@ -62,11 +62,11 @@ public class SeguimientoCrecimientoController {
 	 * @param dto datos del seguimiento
 	 * @return el seguimiento registrado, con la edad del lote
 	 */
-	@Operation(summary = "Registrar seguimiento", description = "Verifica en PostgreSQL que el lote exista y esté activo, y calcula su edad con la fecha de ingreso. Si no se envía la fecha, se usa la de hoy.")
+	@Operation(summary = "Registrar seguimiento", description = "Verifica en PostgreSQL que el lote exista y esté activo, y calcula su edad con la fecha de ingreso. Si no se envía la fecha, se usa la de hoy. Un lote puede tener varios seguimientos el mismo día.")
 	@ApiResponse(responseCode = "201", description = "Seguimiento registrado")
 	@ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
 	@ApiResponse(responseCode = "404", description = "El lote no existe", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
-	@ApiResponse(responseCode = "409", description = "El lote no está activo o ya tiene seguimiento ese día", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@ApiResponse(responseCode = "409", description = "El lote no está activo", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
 	@PreAuthorize(REGISTRAR)
 	@PostMapping
 	public ResponseEntity<SeguimientoCrecimientoDTO> crear(@Validated(AlCrear.class) @RequestBody SeguimientoCrecimientoDTO dto) {

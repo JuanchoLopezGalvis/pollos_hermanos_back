@@ -27,4 +27,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 	 * @return {@code true} si existe
 	 */
 	boolean existsByNombreUsuario(String nombreUsuario);
+
+	/**
+	 * Indica si ya existe un usuario con ese correo.
+	 *
+	 * @param correo correo
+	 * @return {@code true} si existe
+	 */
+	boolean existsByCorreo(String correo);
 }

@@ -55,18 +55,16 @@ public class SeguimientoCrecimientoService {
 	 *
 	 * @param dto datos del seguimiento
 	 * @return el seguimiento guardado, con su edad calculada
-	 * @throws ReglaNegocioException si el lote no está activo, la fecha es anterior
-	 *         a su ingreso o ya hay un seguimiento de ese lote ese día
+	 * Se admiten varios seguimientos del mismo lote el mismo día.
+	 *
+	 * @throws ReglaNegocioException si el lote no está activo o la fecha es
+	 *         anterior a su ingreso
 	 */
 	public SeguimientoCrecimientoDTO crear(SeguimientoCrecimientoDTO dto) {
 		SeguimientoCrecimiento seguimiento = modelMapper.map(dto, SeguimientoCrecimiento.class);
 		seguimiento.setId(null);
 		if (seguimiento.getFecha() == null) {
 			seguimiento.setFecha(LocalDate.now());
-		}
-		if (seguimientoRepository.existsByCodigoLoteAndFecha(seguimiento.getCodigoLote(), seguimiento.getFecha())) {
-			throw new ReglaNegocioException("Ya existe un seguimiento del lote " + seguimiento.getCodigoLote()
-					+ " para el " + seguimiento.getFecha() + ".");
 		}
 		seguimiento.setEdadDias(calcularEdad(seguimiento.getCodigoLote(), seguimiento.getFecha()));
 		return aDTO(seguimientoRepository.save(seguimiento));
