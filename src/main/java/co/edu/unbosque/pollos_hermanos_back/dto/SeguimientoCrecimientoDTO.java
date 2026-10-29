@@ -40,6 +40,7 @@ public class SeguimientoCrecimientoDTO {
 
 	/** Peso promedio de las aves en gramos. */
 	@Positive(message = "debe ser mayor que cero")
+	@DecimalMax(value = "10000", message = "no puede pasar de 10.000 g")
 	private Double pesoPromedioGramos;
 
 	/** Temperatura del galpón en grados Celsius. */

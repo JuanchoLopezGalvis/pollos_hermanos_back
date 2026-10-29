@@ -21,10 +21,10 @@ import jakarta.validation.constraints.Size;
  */
 public record RegistroCuentaClienteDTO(
 		@NotNull(message = "es obligatorio") Long idTipoCliente,
-		@NotBlank(message = "es obligatorio") @Size(max = 20, message = "admite máximo 20 caracteres") String documento,
+		@NotBlank(message = "es obligatorio") @Size(max = 20, message = "admite máximo 20 caracteres") @Pattern(regexp = "^\\d{5,15}(-\\d)?$", message = "debe tener de 5 a 15 dígitos, sin puntos ni espacios (NIT: 900123456-7)") String documento,
 		@NotBlank(message = "es obligatorio") @Size(max = 120, message = "admite máximo 120 caracteres") String nombre,
 		@NotBlank(message = "es obligatoria") @Size(max = 200, message = "admite máximo 200 caracteres") String direccion,
-		@Size(max = 20, message = "admite máximo 20 caracteres") String telefono,
+		@Size(max = 20, message = "admite máximo 20 caracteres") @Pattern(regexp = "^$|^\\+?\\d{7,15}$", message = "debe tener de 7 a 15 dígitos, sin espacios ni guiones") String telefono,
 		@NotBlank(message = "es obligatorio") @Email(message = "no es un correo válido")
 		@Size(max = 120, message = "admite máximo 120 caracteres") String correo,
 		@NotBlank(message = "es obligatorio") @Size(min = 3, max = 50, message = "debe tener entre 3 y 50 caracteres")

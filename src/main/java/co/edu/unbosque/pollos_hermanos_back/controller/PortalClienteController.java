@@ -149,6 +149,18 @@ public class PortalClienteController {
 	}
 
 	/**
+	 * Historial de todos los pagos del cliente.
+	 *
+	 * @return pagos de todas sus compras
+	 */
+	@Operation(summary = "Historial de mis pagos", description = "Todos los pagos del cliente en todas sus compras, del más reciente al más antiguo.")
+	@ApiResponse(responseCode = "200", description = "Pagos del cliente")
+	@GetMapping("/pagos")
+	public ResponseEntity<List<PagoDTO>> obtenerHistorialPagos() {
+		return ResponseEntity.ok(portalService.historialPagos());
+	}
+
+	/**
 	 * Prepara el pago con Wompi de una venta propia.
 	 *
 	 * @param id  venta

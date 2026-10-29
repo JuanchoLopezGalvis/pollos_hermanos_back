@@ -1,5 +1,6 @@
 package co.edu.unbosque.pollos_hermanos_back.service;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -34,21 +35,27 @@ public class CorreoService {
 	/** Motor de plantillas de Thymeleaf. */
 	private final ITemplateEngine motorPlantillas;
 
-	/** Dirección del remitente. */
+	/** Dirección de la finca desde la que salen los correos. */
 	private final String remitente;
+
+	/** Nombre que ve el cliente como remitente. */
+	private final String nombreRemitente;
 
 	/**
 	 * Crea el servicio.
 	 *
 	 * @param mailSender      cliente de correo
 	 * @param motorPlantillas motor de plantillas
-	 * @param remitente       dirección del remitente ({@code MAIL_USERNAME})
+	 * @param remitente       correo de la finca ({@code MAIL_FROM}, o {@code MAIL_USERNAME} si no se define)
+	 * @param nombreRemitente nombre visible del remitente ({@code MAIL_FROM_NOMBRE})
 	 */
 	public CorreoService(JavaMailSender mailSender, ITemplateEngine motorPlantillas,
-			@Value("${spring.mail.username:}") String remitente) {
+			@Value("${pollos.correo.remitente:}") String remitente,
+			@Value("${pollos.correo.nombre-remitente:Los Pollos Hermanos}") String nombreRemitente) {
 		this.mailSender = mailSender;
 		this.motorPlantillas = motorPlantillas;
-		this.remitente = remitente;
+		this.remitente = remitente == null ? "" : remitente.trim();
+		this.nombreRemitente = nombreRemitente;
 	}
 
 	/**
@@ -81,13 +88,14 @@ public class CorreoService {
 			MimeMessage correo = mailSender.createMimeMessage();
 			MimeMessageHelper ayudante = new MimeMessageHelper(correo, false, StandardCharsets.UTF_8.name());
 			if (!remitente.isBlank()) {
-				ayudante.setFrom(remitente);
+				ayudante.setFrom(remitente, nombreRemitente);
+				ayudante.setReplyTo(remitente, nombreRemitente);
 			}
 			ayudante.setTo(destinatario);
 			ayudante.setSubject(asunto);
 			ayudante.setText(html, true);
 			mailSender.send(correo);
-		} catch (MessagingException | MailException e) {
+		} catch (MessagingException | MailException | UnsupportedEncodingException e) {
 			throw new CorreoException("No fue posible enviar el correo a " + destinatario + ".", e);
 		}
 	}

@@ -1,5 +1,6 @@
 package co.edu.unbosque.pollos_hermanos_back.dto;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -11,5 +12,5 @@ import jakarta.validation.constraints.Positive;
  */
 public record LineaPedidoDTO(
 		@NotNull(message = "es obligatorio") Long idLote,
-		@NotNull(message = "es obligatoria") @Positive(message = "debe ser mayor que cero") Integer cantidadAves) {
+		@NotNull(message = "es obligatoria") @Positive(message = "debe ser mayor que cero") @Max(value = 100000, message = "admite máximo 100.000 aves") Integer cantidadAves) {
 }

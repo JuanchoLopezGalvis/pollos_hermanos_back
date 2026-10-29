@@ -2,6 +2,8 @@ package co.edu.unbosque.pollos_hermanos_back.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -79,16 +81,31 @@ class EmpleadoControllerTest {
 	/** Registrar un empleado con permiso responde 201. */
 	@Test
 	void registraEmpleado() throws Exception {
-		when(servicio.crear(any())).thenReturn(new EmpleadoDTO(4L, "101", "Berta", "Uno", null, 5L, "BENEFICIADORA",
+		when(servicio.crear(any())).thenReturn(new EmpleadoDTO(4L, "1010101010", "Berta", "Uno", null, 5L, "BENEFICIADORA",
 				"Beneficiadora", LocalDate.of(2026, 1, 1), null, true));
 
 		mockMvc.perform(post("/empleados").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"documento\":\"101\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
+				.content("{\"documento\":\"1010101010\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
 				.with(authentication(con("personal.gestionar"))))
 				.andExpect(status().isCreated()).andExpect(jsonPath("$.codigoCargo").value("BENEFICIADORA"));
 	}
 
-	/** Retirar dos veces muestra el mensaje del procedimiento. */
+	/** Un documento con muy pocos dígitos o un teléfono con espacios se rechazan antes de llegar al servicio. */
+	@Test
+	void documentoOTelefonoMalEscritosResponden400() throws Exception {
+		mockMvc.perform(post("/empleados").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"documento\":\"101\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
+				.with(authentication(con("personal.gestionar"))))
+				.andExpect(status().isBadRequest());
+		mockMvc.perform(post("/empleados").contentType(MediaType.APPLICATION_JSON)
+				.content("{\"documento\":\"1010101010\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"telefono\":\"300 123 4567\","
+						+ "\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
+				.with(authentication(con("personal.gestionar"))))
+				.andExpect(status().isBadRequest());
+		verify(servicio, never()).crear(any());
+	}
+
+		/** Retirar dos veces muestra el mensaje del procedimiento. */
 	@Test
 	void retiroRepetidoResponde409() throws Exception {
 		when(servicio.retirar(eq(4L), any())).thenThrow(rechazo("El empleado ya está retirado."));
@@ -105,7 +122,7 @@ class EmpleadoControllerTest {
 		mockMvc.perform(get("/empleados?activos=true&cargo=BENEFICIADORA").with(authentication(con("beneficio.registrar"))))
 				.andExpect(status().isOk());
 		mockMvc.perform(post("/empleados").contentType(MediaType.APPLICATION_JSON)
-				.content("{\"documento\":\"101\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
+				.content("{\"documento\":\"1010101010\",\"nombres\":\"Berta\",\"apellidos\":\"Uno\",\"idCargo\":5,\"fechaIngreso\":\"2026-01-01\"}")
 				.with(authentication(con("beneficio.registrar")))).andExpect(status().isForbidden());
 	}
 }

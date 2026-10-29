@@ -45,8 +45,11 @@ class PagoEnLineaServiceTest {
 	/** Reloj fijo para que la referencia sea predecible. */
 	private final Clock reloj = Clock.fixed(Instant.ofEpochMilli(1_700_000_000_000L), ZoneOffset.UTC);
 
+	/** Comprobante por correo simulado. */
+	private final ComprobantePagoService comprobante = mock(ComprobantePagoService.class);
+
 	/** Servicio con llaves de prueba. */
-	private final PagoEnLineaService servicio = new PagoEnLineaService(ventaRepository, pasarela, "pub_test_abc",
+	private final PagoEnLineaService servicio = new PagoEnLineaService(ventaRepository, pasarela, comprobante, "pub_test_abc",
 			"test_integrity_xyz", "https://checkout.wompi.co/p/", reloj);
 
 	/**
@@ -88,7 +91,7 @@ class PagoEnLineaServiceTest {
 	/** Con llaves de producción no se inicia ningún pago: el sistema no cobra dinero real. */
 	@Test
 	void llavesDeProduccionSeRechazan() {
-		PagoEnLineaService produccion = new PagoEnLineaService(ventaRepository, pasarela, "pub_prod_abc", "prod_integrity",
+		PagoEnLineaService produccion = new PagoEnLineaService(ventaRepository, pasarela, comprobante, "pub_prod_abc", "prod_integrity",
 				"https://checkout.wompi.co/p/", reloj);
 
 		assertThrows(ReglaNegocioException.class,
@@ -107,6 +110,7 @@ class PagoEnLineaServiceTest {
 
 		assertTrue(resultado.registrado());
 		verify(ventaRepository).registrarPago(7L, "EN_LINEA", null, new BigDecimal("150000.00"), "tx-1");
+		verify(comprobante).enviar("tx-1");
 	}
 
 	/** Confirmar dos veces la misma transacción no duplica el pago. */
@@ -120,6 +124,7 @@ class PagoEnLineaServiceTest {
 
 		assertTrue(servicio.confirmar("tx-1", idVenta -> true).registrado());
 		verify(ventaRepository, never()).registrarPago(anyLong(), anyString(), any(), any(), anyString());
+		verify(comprobante, never()).enviar(anyString());
 	}
 
 	/** Una transacción rechazada no registra nada. */

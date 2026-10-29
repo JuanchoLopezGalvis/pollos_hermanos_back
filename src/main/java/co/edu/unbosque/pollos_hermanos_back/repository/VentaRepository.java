@@ -93,6 +93,17 @@ public class VentaRepository {
 	}
 
 	/**
+	 * Obtiene todos los pagos de un cliente, en todas sus ventas.
+	 *
+	 * @param idCliente cliente
+	 * @return pagos, del más reciente al más antiguo
+	 */
+	public List<PagoDTO> obtenerPagosDeCliente(Long idCliente) {
+		return jdbcTemplate.query("SELECT p.* FROM v_pago p JOIN v_venta v ON v.id_venta = p.id_venta WHERE v.id_cliente = ?"
+				+ " ORDER BY p.fecha DESC, p.id_pago DESC", MAPEO_PAGO, idCliente);
+	}
+
+	/**
 	 * Registra un pago con {@code sp_registrar_pago}.
 	 *
 	 * @param idVenta            venta
