@@ -2,6 +2,7 @@ package co.edu.unbosque.pollos_hermanos_back.dto;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -13,6 +14,7 @@ public class MuestreoPesoDTO {
 	/** Cantidad de aves pesadas. */
 	@NotNull(message = "es obligatorio")
 	@Positive(message = "debe ser mayor que cero")
+	@Max(value = 100000, message = "admite máximo 100.000 aves")
 	private Integer avesPesadas;
 
 	/** Uniformidad del lote en porcentaje. */

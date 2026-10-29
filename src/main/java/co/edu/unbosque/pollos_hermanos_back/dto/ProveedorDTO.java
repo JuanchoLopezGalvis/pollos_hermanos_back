@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
@@ -22,9 +23,9 @@ import jakarta.validation.constraints.Size;
  */
 public record ProveedorDTO(
 		@JsonProperty(access = JsonProperty.Access.READ_ONLY) Long idProveedor,
-		@NotBlank(message = "es obligatorio") @Size(max = 20, message = "admite máximo 20 caracteres") String nit,
+		@NotBlank(message = "es obligatorio") @Size(max = 20, message = "admite máximo 20 caracteres") @Pattern(regexp = "^\\d{5,15}(-\\d)?$", message = "debe tener de 5 a 15 dígitos, sin puntos ni espacios (NIT: 900123456-7)") String nit,
 		@NotBlank(message = "es obligatorio") @Size(max = 120, message = "admite máximo 120 caracteres") String nombre,
-		@Size(max = 20, message = "admite máximo 20 caracteres") String telefono,
+		@Size(max = 20, message = "admite máximo 20 caracteres") @Pattern(regexp = "^$|^\\+?\\d{7,15}$", message = "debe tener de 7 a 15 dígitos, sin espacios ni guiones") String telefono,
 		@Email(message = "no es un correo válido") @Size(max = 120, message = "admite máximo 120 caracteres") String correo,
 		@Size(max = 200, message = "admite máximo 200 caracteres") String direccion,
 		boolean suministraAlimento,

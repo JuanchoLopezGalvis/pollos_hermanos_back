@@ -147,6 +147,15 @@ public class PortalClienteService {
 	}
 
 	/**
+	 * Historial de todos los pagos del cliente autenticado, en todas sus ventas.
+	 *
+	 * @return pagos, del más reciente al más antiguo
+	 */
+	public List<PagoDTO> historialPagos() {
+		return ventaRepository.obtenerPagosDeCliente(clienteActual().idCliente());
+	}
+
+	/**
 	 * Prepara el checkout de Wompi para pagar una venta propia.
 	 *
 	 * @param idVenta venta

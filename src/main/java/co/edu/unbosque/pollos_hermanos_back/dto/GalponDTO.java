@@ -3,6 +3,7 @@ package co.edu.unbosque.pollos_hermanos_back.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import co.edu.unbosque.pollos_hermanos_back.entity.EstadoGalpon;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -25,6 +26,7 @@ public class GalponDTO {
 	/** Número máximo de aves. */
 	@NotNull(message = "es obligatoria")
 	@Positive(message = "debe ser mayor que cero")
+	@Max(value = 100000, message = "admite máximo 100.000 aves")
 	private Integer capacidadMaxima;
 
 	/**

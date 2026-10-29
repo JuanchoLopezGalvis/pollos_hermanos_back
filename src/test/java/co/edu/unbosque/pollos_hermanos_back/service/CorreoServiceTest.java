@@ -30,7 +30,8 @@ class CorreoServiceTest {
 	private final JavaMailSender mailSender = mock(JavaMailSender.class);
 
 	/** Servicio bajo prueba. */
-	private final CorreoService correoService = new CorreoService(mailSender, motorPlantillas(), "finca@pollos.co");
+	private final CorreoService correoService = new CorreoService(mailSender, motorPlantillas(), "finca@pollos.co",
+			"Los Pollos Hermanos");
 
 	/**
 	 * Crea el motor de Thymeleaf con SpEL, igual al de la aplicación, que lee las plantillas de {@code templates}.
@@ -61,6 +62,8 @@ class CorreoServiceTest {
 		MimeMessage enviado = captor.getValue();
 		enviado.saveChanges();
 		assertEquals("Pedido confirmado", enviado.getSubject());
+		assertEquals("Los Pollos Hermanos <finca@pollos.co>", enviado.getFrom()[0].toString());
+		assertEquals("cliente@correo.co", enviado.getAllRecipients()[0].toString());
 		assertTrue(enviado.getContent().toString().contains("Pedido 15: 200 aves."));
 	}
 

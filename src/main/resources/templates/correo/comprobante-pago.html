@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Comprobante de pago</title>
+</head>
+<body style="margin:0; padding:0; background-color:#f4f1ea; font-family:Arial, Helvetica, sans-serif; color:#2b2b2b;">
+	<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f1ea; padding:24px 0;">
+		<tr>
+			<td align="center">
+				<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px; background-color:#ffffff; border-radius:8px; overflow:hidden;">
+					<tr>
+						<td style="background-color:#c8102e; color:#ffffff; padding:20px 24px; font-size:20px; font-weight:bold;">
+							Los Pollos Hermanos
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:24px;">
+							<h1 style="margin:0 0 4px; font-size:18px;">Comprobante de pago</h1>
+							<p style="margin:0 0 20px; font-size:13px; color:#777777;">
+								Pago <span th:text="${'#' + numeroPago}">#1</span> del <span th:text="${fechaPago}">01/01/2026</span>
+							</p>
+							<p style="margin:0 0 20px; font-size:15px; line-height:1.5;">
+								Hola <strong th:text="${cliente}">Cliente</strong>, recibimos tu pago de
+								<strong th:text="${montoPagado}">$ 0</strong> por la compra
+								<strong th:text="${'#' + numeroVenta}">#1</strong>. Gracias por tu compra.
+							</p>
+
+							<h2 style="margin:0 0 8px; font-size:15px; color:#c8102e;">Tu compra</h2>
+							<table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="font-size:14px; border-collapse:collapse; margin-bottom:20px;">
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Fecha de la compra</td><td align="right" th:text="${fechaVenta}">-</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Pollos</td><td align="right" th:text="${cantidadAves}">0</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Peso total</td><td align="right" th:text="${pesoTotal}">0 lb</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Peso promedio por pollo</td><td align="right" th:text="${pesoPromedio}">0 lb</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Precio por libra</td><td align="right" th:text="${precioLibra}">$ 0</td></tr>
+								<tr><td><strong>Valor de la compra</strong></td><td align="right"><strong th:text="${valorTotal}">$ 0</strong></td></tr>
+							</table>
+
+							<h2 style="margin:0 0 8px; font-size:15px; color:#c8102e;">Este pago</h2>
+							<table role="presentation" width="100%" cellpadding="6" cellspacing="0" style="font-size:14px; border-collapse:collapse; margin-bottom:20px;">
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Medio de pago</td><td align="right" th:text="${metodo}">En línea</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;" th:if="${referencia != null}"><td style="color:#777777;">Referencia Wompi</td><td align="right" th:text="${referencia}">-</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Monto pagado</td><td align="right" th:text="${montoPagado}">$ 0</td></tr>
+								<tr style="border-bottom:1px solid #eeeeee;"><td style="color:#777777;">Total pagado en la compra</td><td align="right" th:text="${totalPagado}">$ 0</td></tr>
+								<tr><td><strong>Saldo pendiente</strong></td><td align="right"><strong th:text="${saldo}">$ 0</strong></td></tr>
+							</table>
+
+							<p th:if="${pagada}" style="margin:0; padding:12px; background-color:#e8f5e9; color:#2e7d32; border-radius:6px; font-size:14px;">
+								Tu compra quedó totalmente pagada.
+							</p>
+							<p th:unless="${pagada}" style="margin:0; padding:12px; background-color:#fff8e1; color:#8a6d00; border-radius:6px; font-size:14px;">
+								Recuerda pagar el saldo antes del <strong th:text="${fechaLimite}">-</strong>. Puedes hacerlo desde el portal, en <em>Mis compras</em>.
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td style="padding:16px 24px; font-size:12px; color:#777777; border-top:1px solid #eeeeee;">
+							Este correo fue enviado automáticamente por el sistema de gestión de la finca. No lo respondas.
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>

@@ -31,7 +31,7 @@ import co.edu.unbosque.pollos_hermanos_back.repository.VentaRepository;
  * Wompi, de modo que los datos de tarjeta nunca pasan por el sistema. Al volver,
  * el backend consulta la transacción directamente a Wompi y solo registra el
  * pago (con {@code sp_registrar_pago}) si la pasarela la confirma como
- * aprobada. Solo se aceptan llaves de prueba: no se mueve dinero real.
+ * aprobada, y entonces le envía al cliente el comprobante por correo. Solo se aceptan llaves de prueba: no se mueve dinero real.
  */
 @Service
 public class PagoEnLineaService {
@@ -63,21 +63,25 @@ public class PagoEnLineaService {
 	/** Reloj para generar referencias únicas. */
 	private final Clock reloj;
 
+	/** Comprobante por correo de cada pago nuevo. */
+	private final ComprobantePagoService comprobante;
+
 	/**
 	 * Crea el servicio.
 	 *
 	 * @param ventaRepository   acceso a ventas y pagos
 	 * @param clientePasarela   consulta de transacciones
+	 * @param comprobante       comprobante por correo
 	 * @param llavePublica      llave pública del sandbox ({@code pub_test_...})
 	 * @param secretoIntegridad secreto de integridad del sandbox
 	 * @param urlCheckout       URL del checkout web
 	 */
 	@Autowired
 	public PagoEnLineaService(VentaRepository ventaRepository, ClientePasarela clientePasarela,
-			@Value("${pollos.wompi.llave-publica:}") String llavePublica,
+			ComprobantePagoService comprobante, @Value("${pollos.wompi.llave-publica:}") String llavePublica,
 			@Value("${pollos.wompi.secreto-integridad:}") String secretoIntegridad,
 			@Value("${pollos.wompi.url-checkout:https://checkout.wompi.co/p/}") String urlCheckout) {
-		this(ventaRepository, clientePasarela, llavePublica, secretoIntegridad, urlCheckout, Clock.systemUTC());
+		this(ventaRepository, clientePasarela, comprobante, llavePublica, secretoIntegridad, urlCheckout, Clock.systemUTC());
 	}
 
 	/**
@@ -85,15 +89,17 @@ public class PagoEnLineaService {
 	 *
 	 * @param ventaRepository   acceso a ventas y pagos
 	 * @param clientePasarela   consulta de transacciones
+	 * @param comprobante       comprobante por correo
 	 * @param llavePublica      llave pública del sandbox
 	 * @param secretoIntegridad secreto de integridad
 	 * @param urlCheckout       URL del checkout web
 	 * @param reloj             reloj
 	 */
-	PagoEnLineaService(VentaRepository ventaRepository, ClientePasarela clientePasarela, String llavePublica,
-			String secretoIntegridad, String urlCheckout, Clock reloj) {
+	PagoEnLineaService(VentaRepository ventaRepository, ClientePasarela clientePasarela, ComprobantePagoService comprobante,
+			String llavePublica, String secretoIntegridad, String urlCheckout, Clock reloj) {
 		this.ventaRepository = ventaRepository;
 		this.clientePasarela = clientePasarela;
+		this.comprobante = comprobante;
 		this.llavePublica = llavePublica;
 		this.secretoIntegridad = secretoIntegridad;
 		this.urlCheckout = urlCheckout;
@@ -132,7 +138,8 @@ public class PagoEnLineaService {
 	/**
 	 * Confirma un pago al volver de la pasarela. Consulta la transacción en
 	 * Wompi y, si está aprobada, registra el pago en la venta. Es idempotente:
-	 * confirmar dos veces la misma transacción no duplica el pago. Solo acepta
+	 * confirmar dos veces la misma transacción no duplica el pago ni el
+	 * comprobante: el correo solo sale cuando el pago es nuevo. Solo acepta
 	 * ventas que pasen el filtro: el portal lo usa para que un cliente no
 	 * confirme ni consulte pagos de ventas ajenas.
 	 *
@@ -164,6 +171,9 @@ public class PagoEnLineaService {
 				}
 				yaEstaba = true;
 			}
+		}
+		if (!yaEstaba) {
+			comprobante.enviar(t.id());
 		}
 		BigDecimal saldo = ventaRepository.buscarVenta(idVenta).map(VentaDTO::saldo).orElse(null);
 		return new ResultadoPagoEnLineaDTO(t.id(), t.estado(), true, idVenta, monto, saldo,

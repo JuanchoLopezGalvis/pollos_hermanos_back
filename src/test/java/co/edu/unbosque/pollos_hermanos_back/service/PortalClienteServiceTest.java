@@ -153,6 +153,14 @@ class PortalClienteServiceTest {
 		assertFalse(filtro.getValue().test(99L));
 	}
 
+	/** El historial trae los pagos de todas las ventas del cliente autenticado. */
+	@Test
+	void historialPagosEsDelClienteAutenticado() {
+		servicio.historialPagos();
+
+		verify(ventaRepository).obtenerPagosDeCliente(4L);
+	}
+
 	/** Un usuario que no es cliente (por ejemplo, del personal) no tiene portal. */
 	@Test
 	void usuarioSinClienteResponde404() {

@@ -3,6 +3,7 @@ package co.edu.unbosque.pollos_hermanos_back.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -20,6 +21,6 @@ import jakarta.validation.constraints.Size;
 public record RegistroOtroIngresoDTO(
 		@NotNull(message = "es obligatorio") Long idLote,
 		@PastOrPresent(message = "no puede ser futura") LocalDate fecha,
-		@NotNull(message = "es obligatorio") @Positive(message = "debe ser mayor que cero") BigDecimal monto,
+		@NotNull(message = "es obligatorio") @Positive(message = "debe ser mayor que cero") @Digits(integer = 12, fraction = 2, message = "admite máximo 12 cifras enteras y 2 decimales") BigDecimal monto,
 		@NotBlank(message = "es obligatoria") @Size(max = 200, message = "admite máximo 200 caracteres") String descripcion) {
 }
