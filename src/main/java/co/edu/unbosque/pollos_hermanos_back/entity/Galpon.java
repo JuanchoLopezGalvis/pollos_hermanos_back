@@ -20,7 +20,7 @@ import jakarta.persistence.Table;
  * comparten su capacidad.
  * <p>
  * Las reglas (ocupado solo con lotes activos, capacidad no menor que las aves
- * de sus lotes activos) las valida el trigger {@code trg_galpon_validar} de
+ * de sus lotes activos) las valida el trigger {@code tgr_biu_galpon_validar} de
  * PostgreSQL.
  */
 @Entity

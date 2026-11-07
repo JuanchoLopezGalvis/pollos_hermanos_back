@@ -13,7 +13,7 @@ import co.edu.unbosque.pollos_hermanos_back.dto.EmpleadoDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.RegistroEmpleadoDTO;
 
 /**
- * Acceso a los empleados en PostgreSQL. El trigger {@code trg_empleado_validar}
+ * Acceso a los empleados en PostgreSQL. El trigger {@code tgr_biu_empleado_validar}
  * impide reactivar a un retirado o cambiarle el cargo; el retiro pasa por
  * {@code sp_retirar_empleado}.
  */

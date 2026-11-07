@@ -91,7 +91,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_producto_sanitario_validar
+CREATE TRIGGER tgr_biu_producto_sanitario_validar
     BEFORE INSERT OR UPDATE OF id_proveedor ON producto_sanitario
     FOR EACH ROW EXECUTE FUNCTION fn_trg_producto_sanitario_validar();
 
@@ -109,7 +109,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_compra_sanitaria_validar
+CREATE TRIGGER tgr_bi_compra_sanitaria_validar
     BEFORE INSERT ON compra_sanitaria
     FOR EACH ROW EXECUTE FUNCTION fn_trg_compra_sanitaria_validar();
 
@@ -118,22 +118,22 @@ CREATE FUNCTION fn_trg_aplicacion_validar()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_lote lote%ROWTYPE;
+    r_lote lote%ROWTYPE;
 BEGIN
     IF TG_OP = 'UPDATE' THEN
         RAISE EXCEPTION 'Una aplicación sanitaria no se modifica: registre la corrección como una aplicación nueva.';
     END IF;
     PERFORM fn_validar_empleado(NEW.id_empleado, 'ENCARGADO_SANIDAD');
 
-    SELECT * INTO v_lote FROM lote WHERE id_lote = NEW.id_lote;
+    SELECT * INTO r_lote FROM lote WHERE id_lote = NEW.id_lote;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'El lote indicado no existe.';
     END IF;
-    IF v_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
-        RAISE EXCEPTION 'El lote % está %: solo se registran aplicaciones en lotes activos.', v_lote.codigo, v_lote.estado;
+    IF r_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
+        RAISE EXCEPTION 'El lote % está %: solo se registran aplicaciones en lotes activos.', r_lote.codigo, r_lote.estado;
     END IF;
-    IF NEW.fecha < v_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
-        RAISE EXCEPTION 'La fecha de la aplicación debe estar entre el ingreso del lote (%) y hoy.', v_lote.fecha_ingreso;
+    IF NEW.fecha < r_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
+        RAISE EXCEPTION 'La fecha de la aplicación debe estar entre el ingreso del lote (%) y hoy.', r_lote.fecha_ingreso;
     END IF;
 
     NEW.costo_unitario := fn_costo_promedio_producto(NEW.id_producto, NEW.fecha);
@@ -141,7 +141,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_aplicacion_validar
+CREATE TRIGGER tgr_biu_aplicacion_validar
     BEFORE INSERT OR UPDATE ON aplicacion_sanitaria
     FOR EACH ROW EXECUTE FUNCTION fn_trg_aplicacion_validar();
 
@@ -153,8 +153,8 @@ CREATE PROCEDURE sp_registrar_compra_sanitaria(
     OUT p_id_compra   BIGINT)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO compra_sanitaria (id_producto, fecha, cantidad, costo_unitario)
@@ -162,15 +162,15 @@ BEGIN
         RETURNING id_compra_sanitaria INTO p_id_compra;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;
@@ -187,8 +187,8 @@ CREATE PROCEDURE sp_registrar_aplicacion_sanitaria(
     OUT p_costo_total  NUMERIC)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO aplicacion_sanitaria (id_lote, id_producto, id_empleado, fecha, dosis, costo_unitario, observaciones)
@@ -197,15 +197,15 @@ BEGIN
         RETURNING id_aplicacion, ROUND(dosis * costo_unitario, 2) INTO p_id_aplicacion, p_costo_total;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;

@@ -172,7 +172,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_compra_alimento_validar
+CREATE TRIGGER tgr_biu_compra_alimento_validar
     BEFORE INSERT OR UPDATE ON compra_alimento
     FOR EACH ROW EXECUTE FUNCTION fn_trg_compra_alimento_validar();
 
@@ -182,40 +182,40 @@ CREATE FUNCTION fn_trg_consumo_alimento_validar()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_lote        lote%ROWTYPE;
+    r_lote        lote%ROWTYPE;
     v_edad        INTEGER;
     v_etapa_tipo  BIGINT;
     v_etapa_edad  BIGINT;
-    v_nombre_tipo TEXT;
-    v_nombre_etapa TEXT;
+    vv_nombre_tipo TEXT;
+    vv_nombre_etapa TEXT;
     v_inventario  NUMERIC;
 BEGIN
     IF TG_OP = 'UPDATE' THEN
         RAISE EXCEPTION 'Un consumo de alimento no se modifica: registre la corrección como un consumo nuevo de otra fecha.';
     END IF;
 
-    SELECT * INTO v_lote FROM lote WHERE id_lote = NEW.id_lote;
+    SELECT * INTO r_lote FROM lote WHERE id_lote = NEW.id_lote;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'El lote indicado no existe.';
     END IF;
-    IF v_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
-        RAISE EXCEPTION 'El lote % está %: solo se registra consumo en lotes activos.', v_lote.codigo, v_lote.estado;
+    IF r_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
+        RAISE EXCEPTION 'El lote % está %: solo se registra consumo en lotes activos.', r_lote.codigo, r_lote.estado;
     END IF;
-    IF NEW.fecha < v_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
-        RAISE EXCEPTION 'La fecha del consumo debe estar entre el ingreso del lote (%) y hoy.', v_lote.fecha_ingreso;
+    IF NEW.fecha < r_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
+        RAISE EXCEPTION 'La fecha del consumo debe estar entre el ingreso del lote (%) y hoy.', r_lote.fecha_ingreso;
     END IF;
 
-    SELECT t.id_etapa, t.nombre INTO v_etapa_tipo, v_nombre_tipo
+    SELECT t.id_etapa, t.nombre INTO v_etapa_tipo, vv_nombre_tipo
     FROM tipo_alimento t WHERE t.id_tipo_alimento = NEW.id_tipo_alimento;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'El tipo de alimento indicado no existe.';
     END IF;
-    v_edad := NEW.fecha - v_lote.fecha_ingreso + 1;
+    v_edad := NEW.fecha - r_lote.fecha_ingreso + 1;
     v_etapa_edad := fn_etapa_por_edad(v_edad);
     IF v_etapa_edad IS DISTINCT FROM v_etapa_tipo THEN
-        SELECT nombre INTO v_nombre_etapa FROM etapa_alimentacion WHERE id_etapa = v_etapa_edad;
+        SELECT nombre INTO vv_nombre_etapa FROM etapa_alimentacion WHERE id_etapa = v_etapa_edad;
         RAISE EXCEPTION 'El lote % tiene % días ese día y está en la etapa de %: el alimento "%" no corresponde.',
-            v_lote.codigo, v_edad, lower(COALESCE(v_nombre_etapa, 'ninguna')), v_nombre_tipo;
+            r_lote.codigo, v_edad, lower(COALESCE(vv_nombre_etapa, 'ninguna')), vv_nombre_tipo;
     END IF;
 
     -- Bloquea las compras del tipo para que dos consumos simultáneos no
@@ -224,7 +224,7 @@ BEGIN
     v_inventario := fn_inventario_alimento(NEW.id_tipo_alimento);
     IF NEW.cantidad_bultos > v_inventario THEN
         RAISE EXCEPTION 'El consumo (% bultos) supera el inventario de "%" (% bultos).',
-            NEW.cantidad_bultos, v_nombre_tipo, v_inventario;
+            NEW.cantidad_bultos, vv_nombre_tipo, v_inventario;
     END IF;
 
     NEW.costo_unitario := fn_costo_promedio_alimento(NEW.id_tipo_alimento, NEW.fecha);
@@ -232,7 +232,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_consumo_alimento_validar
+CREATE TRIGGER tgr_biu_consumo_alimento_validar
     BEFORE INSERT OR UPDATE ON consumo_alimento
     FOR EACH ROW EXECUTE FUNCTION fn_trg_consumo_alimento_validar();
 
@@ -249,8 +249,8 @@ CREATE PROCEDURE sp_registrar_compra_alimento(
     OUT p_id_compra     BIGINT)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO compra_alimento (id_proveedor, id_tipo_alimento, fecha, cantidad_bultos, costo_unitario)
@@ -258,15 +258,15 @@ BEGIN
         RETURNING id_compra_alimento INTO p_id_compra;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;
@@ -281,8 +281,8 @@ CREATE PROCEDURE sp_registrar_consumo_alimento(
     OUT p_costo_unitario NUMERIC)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO consumo_alimento (id_lote, id_tipo_alimento, fecha, cantidad_bultos, costo_unitario)
@@ -290,15 +290,15 @@ BEGIN
         RETURNING id_consumo_alimento, costo_unitario INTO p_id_consumo, p_costo_unitario;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;

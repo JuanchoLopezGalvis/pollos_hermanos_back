@@ -47,7 +47,7 @@ CREATE TABLE lote (
 );
 
 -- S7: un galpón aloja un solo lote activo. Se resuelve de forma declarativa.
-CREATE UNIQUE INDEX ux_lote_activo_por_galpon ON lote (id_galpon)
+CREATE UNIQUE INDEX ix_lote_activo_por_galpon ON lote (id_galpon)
     WHERE estado IN ('EN_ENGORDE', 'LISTO_PARA_VENTA');
 
 CREATE TABLE mortalidad (
@@ -74,13 +74,13 @@ CREATE FUNCTION fn_edad_lote(p_id_lote BIGINT, p_fecha DATE DEFAULT CURRENT_DATE
 RETURNS INTEGER
 LANGUAGE plpgsql STABLE AS $$
 DECLARE
-    v_ingreso DATE;
+    vd_ingreso DATE;
 BEGIN
-    SELECT fecha_ingreso INTO v_ingreso FROM lote WHERE id_lote = p_id_lote;
+    SELECT fecha_ingreso INTO vd_ingreso FROM lote WHERE id_lote = p_id_lote;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'No existe el lote con id %.', p_id_lote;
     END IF;
-    RETURN p_fecha - v_ingreso + 1;
+    RETURN p_fecha - vd_ingreso + 1;
 END;
 $$;
 
@@ -127,7 +127,7 @@ LANGUAGE sql IMMUTABLE AS $$
         WHEN 'uq_galpon_nombre'          THEN 'Ya existe un galpón con ese nombre.'
         WHEN 'ck_galpon_capacidad'       THEN 'La capacidad del galpón debe ser mayor que cero.'
         WHEN 'uq_lote_codigo'            THEN 'Ya existe un lote con ese código.'
-        WHEN 'ux_lote_activo_por_galpon' THEN 'El galpón ya tiene un lote activo.'
+        WHEN 'ix_lote_activo_por_galpon' THEN 'El galpón ya tiene un lote activo.'
         WHEN 'fk_lote_galpon'            THEN 'El galpón indicado no existe.'
         WHEN 'ck_lote_codigo'            THEN 'El código del lote solo admite letras mayúsculas, números y guiones.'
         WHEN 'ck_lote_cantidad'          THEN 'La cantidad inicial de aves debe ser mayor que cero.'
@@ -170,7 +170,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_galpon_validar
+CREATE TRIGGER tgr_biu_galpon_validar
     BEFORE INSERT OR UPDATE ON galpon
     FOR EACH ROW EXECUTE FUNCTION fn_trg_galpon_validar();
 
@@ -180,10 +180,10 @@ CREATE FUNCTION fn_trg_lote_validar()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_galpon galpon%ROWTYPE;
+    r_galpon galpon%ROWTYPE;
     v_disponibles INTEGER;
 BEGIN
-    SELECT * INTO v_galpon FROM galpon WHERE id_galpon = NEW.id_galpon FOR UPDATE;
+    SELECT * INTO r_galpon FROM galpon WHERE id_galpon = NEW.id_galpon FOR UPDATE;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'El galpón indicado no existe.';
     END IF;
@@ -192,11 +192,11 @@ BEGIN
         IF NEW.estado <> 'EN_ENGORDE' THEN
             RAISE EXCEPTION 'Un lote nuevo debe iniciar en estado EN_ENGORDE.';
         END IF;
-        IF v_galpon.estado = 'MANTENIMIENTO' THEN
-            RAISE EXCEPTION 'El galpón "%" está en mantenimiento y no puede recibir lotes.', v_galpon.nombre;
+        IF r_galpon.estado = 'MANTENIMIENTO' THEN
+            RAISE EXCEPTION 'El galpón "%" está en mantenimiento y no puede recibir lotes.', r_galpon.nombre;
         END IF;
-        IF v_galpon.estado = 'OCUPADO' THEN
-            RAISE EXCEPTION 'El galpón "%" ya tiene un lote activo.', v_galpon.nombre;
+        IF r_galpon.estado = 'OCUPADO' THEN
+            RAISE EXCEPTION 'El galpón "%" ya tiene un lote activo.', r_galpon.nombre;
         END IF;
         IF NEW.fecha_ingreso > CURRENT_DATE THEN
             RAISE EXCEPTION 'La fecha de ingreso no puede ser futura.';
@@ -227,15 +227,15 @@ BEGIN
         END IF;
     END IF;
 
-    IF NEW.cantidad_inicial > v_galpon.capacidad_maxima THEN
+    IF NEW.cantidad_inicial > r_galpon.capacidad_maxima THEN
         RAISE EXCEPTION 'La cantidad de aves (%) supera la capacidad del galpón "%" (%).',
-            NEW.cantidad_inicial, v_galpon.nombre, v_galpon.capacidad_maxima;
+            NEW.cantidad_inicial, r_galpon.nombre, r_galpon.capacidad_maxima;
     END IF;
     RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER trg_lote_validar
+CREATE TRIGGER tgr_biu_lote_validar
     BEFORE INSERT OR UPDATE ON lote
     FOR EACH ROW EXECUTE FUNCTION fn_trg_lote_validar();
 
@@ -254,7 +254,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_lote_galpon
+CREATE TRIGGER tgr_aiu_lote_galpon
     AFTER INSERT OR UPDATE OF estado ON lote
     FOR EACH ROW EXECUTE FUNCTION fn_trg_lote_galpon();
 
@@ -264,21 +264,21 @@ CREATE FUNCTION fn_trg_mortalidad_validar()
 RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_lote lote%ROWTYPE;
+    r_lote lote%ROWTYPE;
     v_disponibles INTEGER;
 BEGIN
-    SELECT * INTO v_lote FROM lote WHERE id_lote = NEW.id_lote FOR UPDATE;
+    SELECT * INTO r_lote FROM lote WHERE id_lote = NEW.id_lote FOR UPDATE;
     IF NOT FOUND THEN
         RAISE EXCEPTION 'El lote indicado no existe.';
     END IF;
     IF TG_OP = 'UPDATE' AND (NEW.id_lote <> OLD.id_lote OR NEW.fecha <> OLD.fecha) THEN
         RAISE EXCEPTION 'El lote y la fecha de un registro de mortalidad no se pueden modificar.';
     END IF;
-    IF v_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
-        RAISE EXCEPTION 'El lote % está %: solo se registra mortalidad en lotes activos.', v_lote.codigo, v_lote.estado;
+    IF r_lote.estado NOT IN ('EN_ENGORDE', 'LISTO_PARA_VENTA') THEN
+        RAISE EXCEPTION 'El lote % está %: solo se registra mortalidad en lotes activos.', r_lote.codigo, r_lote.estado;
     END IF;
-    IF NEW.fecha < v_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
-        RAISE EXCEPTION 'La fecha de mortalidad debe estar entre el ingreso del lote (%) y hoy.', v_lote.fecha_ingreso;
+    IF NEW.fecha < r_lote.fecha_ingreso OR NEW.fecha > CURRENT_DATE THEN
+        RAISE EXCEPTION 'La fecha de mortalidad debe estar entre el ingreso del lote (%) y hoy.', r_lote.fecha_ingreso;
     END IF;
 
     v_disponibles := fn_aves_disponibles(NEW.id_lote);
@@ -287,13 +287,13 @@ BEGIN
     END IF;
     IF NEW.cantidad > v_disponibles THEN
         RAISE EXCEPTION 'La mortalidad (%) supera las aves disponibles del lote % (%).',
-            NEW.cantidad, v_lote.codigo, v_disponibles;
+            NEW.cantidad, r_lote.codigo, v_disponibles;
     END IF;
     RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER trg_mortalidad_validar
+CREATE TRIGGER tgr_biu_mortalidad_validar
     BEFORE INSERT OR UPDATE ON mortalidad
     FOR EACH ROW EXECUTE FUNCTION fn_trg_mortalidad_validar();
 
@@ -314,8 +314,8 @@ CREATE PROCEDURE sp_registrar_lote(
     OUT p_id_lote           BIGINT)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO lote (codigo, id_galpon, fecha_ingreso, cantidad_inicial, costo_pollito, fecha_estimada_venta)
@@ -324,15 +324,15 @@ BEGIN
         RETURNING id_lote INTO p_id_lote;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;
@@ -341,7 +341,7 @@ $$;
 CREATE PROCEDURE sp_cambiar_estado_lote(p_id_lote BIGINT, p_estado VARCHAR)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error   TEXT;
+    vv_error   TEXT;
     v_estado  estado_lote;
 BEGIN
     BEGIN
@@ -352,14 +352,14 @@ BEGIN
         END IF;
     EXCEPTION
         WHEN invalid_text_representation THEN
-            v_error := format('El estado "%s" no es válido.', p_estado);
+            vv_error := format('El estado "%s" no es válido.', p_estado);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;
@@ -377,8 +377,8 @@ CREATE PROCEDURE sp_registrar_mortalidad(
     OUT p_alerta          BOOLEAN)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         INSERT INTO mortalidad (id_lote, fecha, cantidad, causa)
@@ -388,15 +388,15 @@ BEGIN
         p_alerta := p_porcentaje > fn_mortalidad_referencia_pct();
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;
