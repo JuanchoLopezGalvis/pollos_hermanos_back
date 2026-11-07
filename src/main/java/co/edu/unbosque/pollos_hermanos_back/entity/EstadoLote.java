@@ -3,7 +3,7 @@ package co.edu.unbosque.pollos_hermanos_back.entity;
 /**
  * Estados de un lote. Corresponde al tipo enumerado {@code estado_lote} de
  * PostgreSQL. Las transiciones válidas las controla el trigger
- * {@code trg_lote_validar}.
+ * {@code tgr_biu_lote_validar}.
  */
 public enum EstadoLote {
 

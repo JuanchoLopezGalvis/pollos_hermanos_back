@@ -49,13 +49,13 @@ CREATE FUNCTION fn_validar_empleado(p_id_empleado BIGINT, p_codigo_cargo VARCHAR
 RETURNS VOID
 LANGUAGE plpgsql STABLE AS $$
 DECLARE
-    v_nombre  TEXT;
+    vv_nombre  TEXT;
     v_activo  BOOLEAN;
-    v_cargo   TEXT;
-    v_esperado TEXT;
+    vv_cargo   TEXT;
+    vv_esperado TEXT;
 BEGIN
     SELECT e.nombres || ' ' || e.apellidos, e.activo, c.codigo
-      INTO v_nombre, v_activo, v_cargo
+      INTO vv_nombre, v_activo, vv_cargo
     FROM empleado e JOIN cargo c ON c.id_cargo = e.id_cargo
     WHERE e.id_empleado = p_id_empleado;
 
@@ -63,11 +63,11 @@ BEGIN
         RAISE EXCEPTION 'El empleado indicado no existe.';
     END IF;
     IF NOT v_activo THEN
-        RAISE EXCEPTION 'El empleado % está retirado y no puede asignarse a nuevos registros.', v_nombre;
+        RAISE EXCEPTION 'El empleado % está retirado y no puede asignarse a nuevos registros.', vv_nombre;
     END IF;
-    IF v_cargo <> p_codigo_cargo THEN
-        SELECT nombre INTO v_esperado FROM cargo WHERE codigo = p_codigo_cargo;
-        RAISE EXCEPTION 'El empleado % no tiene el cargo de %.', v_nombre, lower(COALESCE(v_esperado, p_codigo_cargo));
+    IF vv_cargo <> p_codigo_cargo THEN
+        SELECT nombre INTO vv_esperado FROM cargo WHERE codigo = p_codigo_cargo;
+        RAISE EXCEPTION 'El empleado % no tiene el cargo de %.', vv_nombre, lower(COALESCE(vv_esperado, p_codigo_cargo));
     END IF;
 END;
 $$;
@@ -97,7 +97,7 @@ BEGIN
 END;
 $$;
 
-CREATE TRIGGER trg_empleado_validar
+CREATE TRIGGER tgr_biu_empleado_validar
     BEFORE INSERT OR UPDATE ON empleado
     FOR EACH ROW EXECUTE FUNCTION fn_trg_empleado_validar();
 
@@ -114,7 +114,7 @@ INSERT INTO mensaje_restriccion (restriccion, mensaje) VALUES
     ('uq_galpon_nombre',          'Ya existe un galpón con ese nombre.'),
     ('ck_galpon_capacidad',       'La capacidad del galpón debe ser mayor que cero.'),
     ('uq_lote_codigo',            'Ya existe un lote con ese código.'),
-    ('ux_lote_activo_por_galpon', 'El galpón ya tiene un lote activo.'),
+    ('ix_lote_activo_por_galpon', 'El galpón ya tiene un lote activo.'),
     ('fk_lote_galpon',            'El galpón indicado no existe.'),
     ('ck_lote_codigo',            'El código del lote solo admite letras mayúsculas, números y guiones.'),
     ('ck_lote_cantidad',          'La cantidad inicial de aves debe ser mayor que cero.'),
@@ -139,8 +139,8 @@ $$;
 CREATE PROCEDURE sp_retirar_empleado(p_id_empleado BIGINT, p_fecha_retiro DATE)
 LANGUAGE plpgsql AS $$
 DECLARE
-    v_error        TEXT;
-    v_restriccion  TEXT;
+    vv_error        TEXT;
+    vv_restriccion  TEXT;
 BEGIN
     BEGIN
         UPDATE empleado
@@ -154,15 +154,15 @@ BEGIN
         END IF;
     EXCEPTION
         WHEN integrity_constraint_violation THEN
-            GET STACKED DIAGNOSTICS v_restriccion = CONSTRAINT_NAME;
-            v_error := fn_mensaje_restriccion(v_restriccion, SQLERRM);
+            GET STACKED DIAGNOSTICS vv_restriccion = CONSTRAINT_NAME;
+            vv_error := fn_mensaje_restriccion(vv_restriccion, SQLERRM);
         WHEN raise_exception THEN
-            v_error := SQLERRM;
+            vv_error := SQLERRM;
     END;
 
-    IF v_error IS NOT NULL THEN
+    IF vv_error IS NOT NULL THEN
         ROLLBACK;
-        RAISE EXCEPTION '%', v_error;
+        RAISE EXCEPTION '%', vv_error;
     END IF;
     COMMIT;
 END;

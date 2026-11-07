@@ -19,7 +19,7 @@ import co.edu.unbosque.pollos_hermanos_back.repository.LoteRepository;
  * distintas (producción escalonada) que comparten su capacidad.
  * <p>
  * Las reglas del estado y la capacidad las valida el trigger
- * {@code trg_galpon_validar}; si las incumple, PostgreSQL rechaza la operación y
+ * {@code tgr_biu_galpon_validar}; si las incumple, PostgreSQL rechaza la operación y
  * el manejador global responde con su mensaje.
  */
 @Service

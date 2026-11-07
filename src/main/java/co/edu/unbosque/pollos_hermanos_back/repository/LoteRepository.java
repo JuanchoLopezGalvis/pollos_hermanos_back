@@ -79,7 +79,7 @@ public class LoteRepository {
 	}
 
 	/**
-	 * Corrige los datos editables de un lote. El trigger {@code trg_lote_validar}
+	 * Corrige los datos editables de un lote. El trigger {@code tgr_biu_lote_validar}
 	 * valida la capacidad del galpón, la mortalidad registrada y el ciclo.
 	 *
 	 * @param id                 identificador del lote
@@ -151,7 +151,7 @@ public class LoteRepository {
 
 	/**
 	 * Corrige la cantidad o la causa de un registro de mortalidad. El trigger
-	 * {@code trg_mortalidad_validar} vuelve a comprobar las aves disponibles.
+	 * {@code tgr_biu_mortalidad_validar} vuelve a comprobar las aves disponibles.
 	 *
 	 * @param idLote       identificador del lote
 	 * @param idMortalidad identificador del registro
