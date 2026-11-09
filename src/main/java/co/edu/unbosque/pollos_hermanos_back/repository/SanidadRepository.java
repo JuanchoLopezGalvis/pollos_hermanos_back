@@ -16,7 +16,7 @@ import co.edu.unbosque.pollos_hermanos_back.dto.RegistroProductoSanitarioDTO;
 
 /**
  * Acceso a la sanidad: productos, compras y aplicaciones. Las compras y
- * aplicaciones pasan por sus procedimientos, que hacen {@code COMMIT}.
+ * aplicaciones pasan por sus procedimientos almacenados.
  */
 @Repository
 public class SanidadRepository {

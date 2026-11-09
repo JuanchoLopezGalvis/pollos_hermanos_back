@@ -54,10 +54,13 @@ los privilegios que necesita.
 ### Pruebas SQL
 
 Cada archivo de `sql/pruebas/` prueba las reglas de su módulo dentro de una transacción que se
-deshace al final, así que no deja datos:
+deshace al final, así que no deja datos. Se corren con `pollos_app` y no con `instalar_bd.sh`, porque
+varios casos comprueban que la aplicación no tenga permisos que el superusuario sí tiene:
 
 ```bash
-./instalar_bd.sh 'pruebas/*'
+for f in sql/pruebas/*.sql; do
+  psql -h localhost -U pollos_app -d pollos_hermanos -v ON_ERROR_STOP=1 -f "$f" || break
+done
 ```
 
 ## Variables de entorno
