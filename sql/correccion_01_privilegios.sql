@@ -1,4 +1,3 @@
-
 BEGIN;
 
 SET ROLE pollos_owner;

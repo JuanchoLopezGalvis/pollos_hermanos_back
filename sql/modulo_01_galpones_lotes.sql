@@ -1,19 +1,18 @@
-
 BEGIN;
 
 SET ROLE pollos_owner;
 
-
+-- ---------------------------------------------------------------------
 -- Tipos enumerados
-
+-- ---------------------------------------------------------------------
 
 CREATE TYPE estado_galpon AS ENUM ('DISPONIBLE', 'OCUPADO', 'MANTENIMIENTO');
 
 CREATE TYPE estado_lote AS ENUM ('EN_ENGORDE', 'LISTO_PARA_VENTA', 'VENDIDO', 'CERRADO');
 
-
+-- ---------------------------------------------------------------------
 -- Tablas
-
+-- ---------------------------------------------------------------------
 
 CREATE TABLE galpon (
     id_galpon         BIGINT GENERATED ALWAYS AS IDENTITY,
@@ -65,9 +64,9 @@ CREATE TABLE mortalidad (
 
 CREATE INDEX ix_lote_galpon ON lote (id_galpon);
 
-
+-- ---------------------------------------------------------------------
 -- Funciones
-
+-- ---------------------------------------------------------------------
 
 -- Edad del lote en días en una fecha. El día de ingreso es el día 1.
 CREATE FUNCTION fn_edad_lote(p_id_lote BIGINT, p_fecha DATE DEFAULT CURRENT_DATE)
@@ -140,9 +139,9 @@ LANGUAGE sql IMMUTABLE AS $$
     END;
 $$;
 
-
+-- ---------------------------------------------------------------------
 -- Triggers
-
+-- ---------------------------------------------------------------------
 
 -- Galpón: no se puede marcar OCUPADO sin un lote activo, ni dejar de estarlo
 -- mientras lo tenga; la capacidad no puede bajar de las aves del lote activo.
@@ -297,12 +296,13 @@ CREATE TRIGGER tgr_biu_mortalidad_validar
     BEFORE INSERT OR UPDATE ON mortalidad
     FOR EACH ROW EXECUTE FUNCTION fn_trg_mortalidad_validar();
 
+-- ---------------------------------------------------------------------
 -- Procedimientos
 -- Cada uno hace el trabajo en un bloque interno con EXCEPTION, que traduce los
 -- errores a español. Fuera de ese bloque decide COMMIT o ROLLBACK (PostgreSQL
 -- no permite COMMIT dentro de un bloque con EXCEPTION). Deben llamarse fuera
 -- de una transacción explícita (autocommit), como lo hace el backend.
-
+-- ---------------------------------------------------------------------
 
 CREATE PROCEDURE sp_registrar_lote(
     p_codigo                VARCHAR,
@@ -402,9 +402,9 @@ BEGIN
 END;
 $$;
 
-
+-- ---------------------------------------------------------------------
 -- Vista de consulta para la aplicación
-
+-- ---------------------------------------------------------------------
 
 CREATE VIEW v_lote_resumen AS
 SELECT l.id_lote,
@@ -425,10 +425,11 @@ SELECT l.id_lote,
 FROM lote l
 JOIN galpon g ON g.id_galpon = l.id_galpon;
 
+-- ---------------------------------------------------------------------
 -- Privilegios mínimos de la aplicación: sin DDL ni borrado de lotes y
 -- mortalidad (se corrigen, no se borran). Primero se quitan los privilegios
 -- heredados de ALTER DEFAULT PRIVILEGES, que dan DELETE en toda tabla nueva.
-
+-- ---------------------------------------------------------------------
 
 REVOKE ALL ON galpon, lote, mortalidad, v_lote_resumen FROM pollos_app;
 GRANT SELECT, INSERT, UPDATE, DELETE ON galpon TO pollos_app;

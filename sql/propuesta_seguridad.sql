@@ -1,19 +1,4 @@
--- =====================================================================
--- PROPUESTA: tablas de usuarios, roles y permisos (estilo Django).
--- Estado: borrador para revisar e integrar al modelo relacional de la Fase 1.
---
--- Coincide con las entidades JPA Usuario/UsuarioBase, Rol y Permiso.
--- La aplicación arranca con spring.jpa.hibernate.ddl-auto=validate, así que
--- si cambian nombres o tipos aquí, hay que cambiarlos también en las entidades.
---
--- Equivalencias con Django:
---   usuario          -> auth_user (AbstractUser)
---   rol              -> auth_group
---   permiso          -> auth_permission (codigo = 'modulo.accion')
---   rol_permiso      -> auth_group_permissions
---   usuario_rol      -> auth_user_groups
---   usuario_permiso  -> auth_user_user_permissions
--- =====================================================================
+SET ROLE pollos_owner;
 
 CREATE TABLE permiso (
     id_permiso   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -69,3 +54,5 @@ INSERT INTO permiso (codigo, descripcion) VALUES
 
 -- Privilegios mínimos del rol de la aplicación: solo DML, sin DDL.
 -- GRANT SELECT, INSERT, UPDATE, DELETE ON permiso, rol, usuario, rol_permiso, usuario_rol, usuario_permiso TO pollos_app;
+
+RESET ROLE;
