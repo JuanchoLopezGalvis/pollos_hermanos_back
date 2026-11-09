@@ -23,7 +23,7 @@ import co.edu.unbosque.pollos_hermanos_back.entity.EstadoLote;
  * Acceso a lotes y mortalidad en PostgreSQL con {@link JdbcTemplate}.
  * <p>
  * Las escrituras pasan por los procedimientos almacenados, que validan las
- * reglas del negocio y hacen {@code COMMIT} o {@code ROLLBACK}. Por eso estos
+ * reglas del negocio y manejan su propia transacción. Por eso estos
  * métodos no deben llamarse dentro de una transacción de Spring: PostgreSQL no
  * permite controlar la transacción desde un procedimiento invocado dentro de
  * otra. Las lecturas usan la vista {@code v_lote_resumen}.

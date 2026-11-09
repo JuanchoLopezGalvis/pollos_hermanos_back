@@ -17,7 +17,7 @@ import co.edu.unbosque.pollos_hermanos_back.repository.AlimentacionRepository;
  * Compras y consumo de alimento por etapas. PostgreSQL valida el proveedor, la
  * etapa según la edad del lote y el inventario, y congela el costo promedio del
  * bulto en cada consumo. Sus métodos no son {@code @Transactional} porque los
- * procedimientos hacen su propio {@code COMMIT}.
+ * procedimientos manejan su propia transacción.
  */
 @Service
 public class AlimentacionService {

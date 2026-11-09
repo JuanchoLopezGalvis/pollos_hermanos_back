@@ -18,7 +18,7 @@ import co.edu.unbosque.pollos_hermanos_back.repository.LoteRepository;
  * <p>
  * Las reglas del negocio viven en PostgreSQL: este servicio invoca los
  * procedimientos y no las duplica. Sus métodos no son {@code @Transactional}
- * porque los procedimientos hacen su propio {@code COMMIT} o {@code ROLLBACK}.
+ * porque los procedimientos manejan su propia transacción.
  * No implementa {@link CRUDOperation} porque los lotes no se eliminan: se
  * cierran.
  */
