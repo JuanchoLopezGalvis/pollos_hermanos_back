@@ -1,0 +1,10 @@
+co.edu.unbosque.pollos_hermanos_back
+co.edu.unbosque.pollos_hermanos_back.configuration
+co.edu.unbosque.pollos_hermanos_back.controller
+co.edu.unbosque.pollos_hermanos_back.document
+co.edu.unbosque.pollos_hermanos_back.dto
+co.edu.unbosque.pollos_hermanos_back.entity
+co.edu.unbosque.pollos_hermanos_back.exception
+co.edu.unbosque.pollos_hermanos_back.repository
+co.edu.unbosque.pollos_hermanos_back.security
+co.edu.unbosque.pollos_hermanos_back.service
