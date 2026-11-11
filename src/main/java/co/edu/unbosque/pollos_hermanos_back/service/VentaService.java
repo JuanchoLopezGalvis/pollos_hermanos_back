@@ -14,6 +14,7 @@ import co.edu.unbosque.pollos_hermanos_back.dto.ResultadoCarteraDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.VentaDTO;
 import co.edu.unbosque.pollos_hermanos_back.dto.VentasClienteDTO;
 import co.edu.unbosque.pollos_hermanos_back.exception.RecursoNoEncontradoException;
+import co.edu.unbosque.pollos_hermanos_back.exception.ReglaNegocioException;
 import co.edu.unbosque.pollos_hermanos_back.repository.VentaRepository;
 
 /**
@@ -78,6 +79,24 @@ public class VentaService {
 	public List<PagoDTO> obtenerPagos(Long idVenta) {
 		obtenerVenta(idVenta);
 		return ventaRepository.obtenerPagos(idVenta);
+	}
+
+	/**
+	 * Registra que el cliente pagó en efectivo todo el saldo de una venta. El
+	 * trigger de pago valida el saldo y la venta queda pagada.
+	 *
+	 * @param idVenta venta
+	 * @return la venta actualizada, ya pagada
+	 * @throws RecursoNoEncontradoException si la venta no existe
+	 * @throws ReglaNegocioException        si la venta no tiene saldo pendiente
+	 */
+	public VentaDTO registrarPagoEfectivo(Long idVenta) {
+		VentaDTO venta = obtenerVenta(idVenta);
+		if (venta.saldo() == null || venta.saldo().signum() <= 0) {
+			throw new ReglaNegocioException("La venta " + idVenta + " ya está pagada.");
+		}
+		ventaRepository.registrarPago(idVenta, "EFECTIVO", null, venta.saldo(), null);
+		return obtenerVenta(idVenta);
 	}
 
 	/**
