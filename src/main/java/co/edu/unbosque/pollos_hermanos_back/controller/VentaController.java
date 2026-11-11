@@ -34,11 +34,12 @@ import jakarta.validation.Valid;
 /**
  * Ventas, pagos, entregas y cartera. Registrar ventas y entregas requiere
  * {@code venta.gestionar}; consultar requiere ese permiso, {@code pago.registrar}
- * o {@code cartera.ver}. El personal no registra pagos: el único medio de pago
- * es Wompi y solo lo usa el cliente desde su portal (D27).
+ * o {@code cartera.ver}. El cliente paga con Wompi desde su portal y el personal
+ * con {@code pago.registrar} puede registrar el pago en efectivo del saldo
+ * (módulo 12).
  */
 @RestController
-@Tag(name = "Ventas, pagos y cartera", description = "Ventas desde pedidos confirmados, pagos de los clientes con Wompi, entregas y cartera vencida")
+@Tag(name = "Ventas, pagos y cartera", description = "Ventas desde pedidos confirmados, pagos de los clientes con Wompi o en efectivo, entregas y cartera vencida")
 public class VentaController {
 
 	/** Permiso para consultar. */
@@ -46,6 +47,9 @@ public class VentaController {
 
 	/** Permiso para registrar ventas y entregas. */
 	private static final String GESTIONAR = "@permisos.tiene('venta.gestionar')";
+
+	/** Permiso para registrar el pago en efectivo. */
+	private static final String PAGAR = "@permisos.tiene('pago.registrar')";
 
 	/** Permiso para la cartera. */
 	private static final String CARTERA = "@permisos.tieneAlguno('cartera.ver', 'pago.registrar')";
@@ -117,6 +121,22 @@ public class VentaController {
 	@GetMapping("/ventas/{id}/pagos")
 	public ResponseEntity<List<PagoDTO>> obtenerPagos(@Parameter(description = "Venta") @PathVariable Long id) {
 		return ResponseEntity.ok(ventaService.obtenerPagos(id));
+	}
+
+	/**
+	 * Registra que el cliente pagó en efectivo el saldo de la venta.
+	 *
+	 * @param id venta
+	 * @return la venta, ya pagada
+	 */
+	@Operation(summary = "Registrar pago en efectivo", description = "Invoca sp_registrar_pago con el método EFECTIVO por todo el saldo. La venta queda pagada.")
+	@ApiResponse(responseCode = "200", description = "Pago registrado; la venta queda pagada")
+	@ApiResponse(responseCode = "404", description = "La venta no existe", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@ApiResponse(responseCode = "409", description = "La venta ya está pagada", content = @Content(schema = @Schema(implementation = ErrorApiDTO.class)))
+	@PreAuthorize(PAGAR)
+	@PostMapping("/ventas/{id}/pago-efectivo")
+	public ResponseEntity<VentaDTO> registrarPagoEfectivo(@Parameter(description = "Venta") @PathVariable Long id) {
+		return ResponseEntity.ok(ventaService.registrarPagoEfectivo(id));
 	}
 
 	/**

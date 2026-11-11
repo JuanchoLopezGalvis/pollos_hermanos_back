@@ -2,6 +2,7 @@ package co.edu.unbosque.pollos_hermanos_back.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -86,12 +87,34 @@ class VentaControllerTest {
 				.with(authentication(con("cartera.ver")))).andExpect(status().isForbidden());
 	}
 
-	/** El personal ya no registra pagos: el único medio es Wompi, desde el portal del cliente. */
+	/** No hay registro manual de pagos con método y monto libres: solo Wompi o el pago en efectivo del saldo. */
 	@Test
 	void elPersonalNoRegistraPagos() throws Exception {
 		mockMvc.perform(post("/ventas/7/pagos").contentType(MediaType.APPLICATION_JSON)
 				.content("{\"codigoMetodo\":\"EFECTIVO\",\"monto\":1000}")
 				.with(authentication(con("pago.registrar", "venta.gestionar")))).andExpect(status().isMethodNotAllowed());
+	}
+
+	/** Con pago.registrar se registra el pago en efectivo del saldo. */
+	@Test
+	void registraPagoEnEfectivo() throws Exception {
+		mockMvc.perform(post("/ventas/7/pago-efectivo").with(authentication(con("pago.registrar")))).andExpect(status().isOk());
+		verify(servicio).registrarPagoEfectivo(7L);
+	}
+
+	/** Sin pago.registrar no se registra el pago en efectivo, aunque gestione ventas. */
+	@Test
+	void sinPermisoNoRegistraPagoEnEfectivo() throws Exception {
+		mockMvc.perform(post("/ventas/7/pago-efectivo").with(authentication(con("venta.gestionar"))))
+				.andExpect(status().isForbidden());
+	}
+
+	/** Si la base rechaza el pago (venta ya pagada), responde 409 con el mensaje. */
+	@Test
+	void pagoEnEfectivoRechazadoResponde409() throws Exception {
+		when(servicio.registrarPagoEfectivo(7L)).thenThrow(rechazo("La venta 7 ya está pagada."));
+		mockMvc.perform(post("/ventas/7/pago-efectivo").with(authentication(con("pago.registrar"))))
+				.andExpect(status().isConflict()).andExpect(jsonPath("$.mensaje").value("La venta 7 ya está pagada."));
 	}
 
 	/** Una ruta que no existe responde 404, no 500. */
