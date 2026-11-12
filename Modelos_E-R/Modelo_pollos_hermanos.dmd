@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="Modelo_pollos_hermanos" id="4219BCA2-234B-74CF-30CC-27693F8A94BC" version="3.5">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:06:57 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>4219BCA2-234B-74CF-30CC-27693F8A94BC</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="128F85EA-7C11-5FF3-9C63-17BBCEF6ACF9">
+<designStoragePath>/Modelo_relacional_para_Data_Modeler</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>
