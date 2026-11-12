@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_detalle_pedido_lote" directorySegmentName="seg_0" id="8052AA79-BB5E-305F-B183-5334D01676B5">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>02C0BFB2-D709-2DD8-BA61-7169268F5150</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>7D78EB3B-B99B-2968-CF5D-B935F59EBD59</sourcePk>
+<identifying>true</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>1C3A01FB-3E1A-2733-2101-ACBF3B69213A</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>1698E32D-2FBF-7D0A-32A2-E5F3BB6F77A6</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

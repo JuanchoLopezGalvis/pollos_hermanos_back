@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="73D31A12-F1CD-E792-E1E7-75F47425C356" containerWithKeyObject="D1F648AF-6888-43B1-195F-CAE6E16D2D2E" localFKIndex="4252543F-79E6-EAEA-9DA5-2A1CB8A02773" name="rol_permiso_id_permiso_fkey">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>1224E376-0D85-800B-8897-1A2D30446790</importedID>
+<referredTableLongName>permiso</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>4DC61BB3-7A79-31E6-DD83-4822AA7FE2C5</referredTableID>
+<keyObject>564C07B7-C550-E4CC-E2D5-62703B875680</keyObject>
+<referredKeyID>564C07B7-C550-E4CC-E2D5-62703B875680</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_permiso</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

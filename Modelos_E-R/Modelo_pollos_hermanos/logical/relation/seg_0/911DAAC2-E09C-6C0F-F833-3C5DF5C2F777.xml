@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_compra_alimento_proveedor" directorySegmentName="seg_0" id="911DAAC2-E09C-6C0F-F833-3C5DF5C2F777">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>160782B7-A56B-ED43-249C-17BB2EFDCD46</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>1132F1A0-AD6D-40C4-3DB9-755F5DAD2D9F</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>4AA2A708-48AC-7785-4AAD-52684BF94073</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>89B740C7-60B9-1AE0-36F2-A3FB7AB5BE3E</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

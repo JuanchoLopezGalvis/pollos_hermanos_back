@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="83B5762D-848A-AA7F-6575-1693575A7DDA" containerWithKeyObject="C4E026F4-A372-DBAA-A838-59A67AF2BA9F" localFKIndex="4A9586AB-CD87-5045-FD0E-893AC9A250F3" name="fk_consumo_alimento_tipo">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>D0053AAF-E8BE-2659-20D9-7B55777435F9</importedID>
+<referredTableLongName>tipo_alimento</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>E6D77056-469D-6B66-E95B-AF82FE1B165E</referredTableID>
+<keyObject>A8157227-59F8-FFCF-5F6F-67D96A7F534A</keyObject>
+<referredKeyID>A8157227-59F8-FFCF-5F6F-67D96A7F534A</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_tipo_alimento</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
