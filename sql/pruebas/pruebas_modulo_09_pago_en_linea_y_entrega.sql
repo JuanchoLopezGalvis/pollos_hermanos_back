@@ -75,19 +75,16 @@ INSERT INTO venta (id_pedido, peso_total_libras, precio_libra, fecha_limite_pago
 SELECT id_pedido, 60, 9000, CURRENT_DATE + 30 FROM pedido WHERE id_cliente IN (pg_temp.fn_cli('C-DIR'), pg_temp.fn_cli('C-SIN'));
 
 -- =====================================================================
--- D27: el único medio de pago es Wompi
+-- Medios de pago: Wompi o efectivo (D27 reemplazada por el módulo 12)
 -- =====================================================================
-SELECT pg_temp.fn_verificar('solo el pago en línea queda activo',
-    (SELECT array_agg(codigo) = ARRAY['EN_LINEA']::VARCHAR[] FROM metodo_pago WHERE activo));
-SELECT pg_temp.fn_esperar_error('un pago en efectivo se rechaza', format($$
-    INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 1000) $$,
-    pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('EFECTIVO')), 'solo se reciben en línea');
+SELECT pg_temp.fn_verificar('solo el pago en línea y el efectivo quedan activos (módulo 12)',
+    (SELECT array_agg(codigo ORDER BY codigo) = ARRAY['EFECTIVO', 'EN_LINEA']::VARCHAR[] FROM metodo_pago WHERE activo));
 SELECT pg_temp.fn_esperar_error('un pago por transferencia se rechaza', format($$
     INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 1000) $$,
-    pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('TRANSFERENCIA')), 'solo se reciben en línea');
+    pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('TRANSFERENCIA')), 'en línea con Wompi o en efectivo');
 SELECT pg_temp.fn_esperar_error('un pago en efectivo con referencia inventada también se rechaza', format($$
     INSERT INTO pago (id_venta, id_metodo_pago, monto, referencia_pasarela) VALUES (%s, %s, 1000, 'TX-FALSA') $$,
-    pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('EFECTIVO')), 'solo se reciben en línea');
+    pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('EFECTIVO')), 'no lleva referencia');
 SELECT pg_temp.fn_esperar_error('un pago en línea sin la transacción de Wompi se rechaza', format($$
     INSERT INTO pago (id_venta, id_metodo_pago, monto) VALUES (%s, %s, 1000) $$,
     pg_temp.fn_venta('C-DIR'), pg_temp.fn_metodo('EN_LINEA')), 'referencia de la transacción');

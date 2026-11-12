@@ -2,7 +2,7 @@
 
 Backend del Proyecto Final de Bases de Datos 2 (Universidad El Bosque): gestión de una granja de
 pollos de engorde (galpones, lotes, alimentación, sanidad, personal, gastos, ventas, cartera,
-portal de clientes con pago en línea, seguimiento del crecimiento y auditoría).
+portal de clientes con pago en línea, pago en efectivo registrado por el personal, seguimiento del crecimiento y auditoría).
 
 Equipo: Juan López (Juancho), Dylan y Gabriela.
 
@@ -41,7 +41,7 @@ superusuario sobre la base `pollos_hermanos`.
 
    ```bash
    ./instalar_bd.sh propuesta_seguridad.sql
-   ./instalar_bd.sh 'modulo_0[1-9]*' 'modulo_1[01]*'
+   ./instalar_bd.sh 'modulo_0[1-9]*' 'modulo_1[0-2]*'
    ./instalar_bd.sh correccion_02_zona_horaria.sql
    ```
 
