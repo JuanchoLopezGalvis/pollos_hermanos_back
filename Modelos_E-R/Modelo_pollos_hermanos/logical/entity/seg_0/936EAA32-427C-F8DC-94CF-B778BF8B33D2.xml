@@ -1,0 +1,236 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="936EAA32-427C-F8DC-94CF-B778BF8B33D2" name="cliente">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Comprador de pollos; puede tener una cuenta de usuario para el portal de clientes.]]></commentInRDBMS>
+<generatorID>6B5BAC63-C864-A59A-FAFF-3F8847504A08</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id cliente" id="CD90A853-6E01-D8D4-2BA9-1BBD6C563ADD">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identificador único del cliente (generado automáticamente).]]></commentInRDBMS>
+<generatorID>C45BE8DB-5C7E-3D93-6BFA-6E12DFF75FB6</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id tipo cliente" id="B5FB5402-6CE1-1EC1-232E-B3CBEA2AE2C7">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Referencia al tipo de cliente (tipo_cliente).]]></commentInRDBMS>
+<generatorID>55402D88-2AB8-7502-4817-E9E84F957FD4</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<referedAttribute>1E16863B-D90C-C64D-BDD6-7C91C7ADB89B</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="documento" id="46785184-281E-5258-DEE7-D0D136F89366">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Documento de identidad o NIT único del cliente.]]></commentInRDBMS>
+<generatorID>7CC732CE-2DE7-9A22-06BA-0C7EE3B8610B</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>60029F70-7A5E-BEDD-1C23-1A17D1943ED7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nombre" id="17B7A12F-782E-8DA8-6862-B8B0B1C7ACBA">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nombre o razón social del cliente.]]></commentInRDBMS>
+<generatorID>5557C85C-31C4-9B43-736E-33729B6F6CCF</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>B3066FC5-6955-8454-B0C5-10E883A12DBE</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="direccion" id="8E9701A0-EBA7-E526-EECE-8D35AFA4D72C">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Dirección de entrega habitual.]]></commentInRDBMS>
+<generatorID>7F785067-50F0-8340-F830-71067356A5C3</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>5ACF5698-835B-BD31-FF6B-C456054BF2F8</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="telefono" id="224CE333-57FD-DD6A-F275-D41C9F926D6D">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Teléfono único de contacto (teléfono o correo es obligatorio).]]></commentInRDBMS>
+<generatorID>940CA54C-1280-0778-96E0-DCE8438B98F5</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>60029F70-7A5E-BEDD-1C23-1A17D1943ED7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="correo" id="09468D51-A3F0-3315-0431-62E6929AE028">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Correo único de contacto (teléfono o correo es obligatorio).]]></commentInRDBMS>
+<generatorID>885D0D06-1430-8CE9-F84C-1D57DFAB3A17</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>B3066FC5-6955-8454-B0C5-10E883A12DBE</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="activo" id="8C8AA4E2-2002-B551-49C4-B380D6732064">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Indica si el registro está activo; los inactivos no se usan en registros nuevos.]]></commentInRDBMS>
+<generatorID>A68778D2-B22B-F1C1-1510-2444FB395649</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<constraintName>ck_cliente_activo_bool</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>69F5A670-9ADA-DF86-262B-FAB9FBE07000</domain>
+<listOfValues>
+<valueDef value="N" description=""/>
+<valueDef value="S" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha creacion" id="7A32F36A-1EF9-DF09-65B2-BE3E36F16817">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<generatorID>4FE2D467-2974-C772-ABE4-840A720DB654</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id usuario" id="45D54411-A60D-D324-B8CA-EE9447AEC3C1">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Referencia al usuario (usuario).]]></commentInRDBMS>
+<generatorID>CEF2292F-FEF3-90CB-9984-D3828DA331C8</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>7CD9CC1F-963E-C6C4-1C61-B0556B46A731</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="614EEAAC-0261-3838-7877-A0B272873EA0" name="pk cliente">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>BC428088-6CF0-71BD-E41A-E73724057EB1</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>CD90A853-6E01-D8D4-2BA9-1BBD6C563ADD</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="AC163E95-0A30-D084-8729-B21891CB1618" name="uq cliente correo">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>BA728B36-589B-DBE0-8B8E-801AC58B0A8D</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>09468D51-A3F0-3315-0431-62E6929AE028</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="07CB82D9-C311-6AD1-AA61-45C79375D999" name="uq cliente documento">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>178F7811-4D28-FFAD-8379-74CBF61B7A0C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>46785184-281E-5258-DEE7-D0D136F89366</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="FEE33109-5B25-0969-9BAB-D829AA5B1A33" name="uq cliente telefono">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>71F5DE34-8F4A-95B5-CA60-A766F114BF72</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>224CE333-57FD-DD6A-F275-D41C9F926D6D</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="B8E55E0C-5FB8-32A8-A8F0-A349BB52659C" name="uq cliente usuario">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>288809C2-6038-DEAF-CC0B-ADF38A542F3A</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>45D54411-A60D-D324-B8CA-EE9447AEC3C1</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

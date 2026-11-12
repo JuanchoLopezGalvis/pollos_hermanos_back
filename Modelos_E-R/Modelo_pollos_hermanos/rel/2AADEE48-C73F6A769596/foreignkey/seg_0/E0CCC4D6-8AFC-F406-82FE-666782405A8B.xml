@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E0CCC4D6-8AFC-F406-82FE-666782405A8B" containerWithKeyObject="6B5BAC63-C864-A59A-FAFF-3F8847504A08" localFKIndex="3F0F49B6-A931-0426-D10C-79D9A907A13A" name="fk_cliente_usuario">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>64FA5A5E-45CF-DCB0-151D-D817532B1CCB</importedID>
+<referredTableLongName>usuario</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>0B0A0BF1-FB34-0922-3925-1DAFDE98A5E2</referredTableID>
+<keyObject>984ADC68-0010-3F41-46F8-32C3B5326D73</keyObject>
+<referredKeyID>984ADC68-0010-3F41-46F8-32C3B5326D73</referredKeyID>
+<mandatory>false</mandatory>
+<refColNames>id_usuario</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

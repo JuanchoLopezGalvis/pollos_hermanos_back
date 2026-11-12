@@ -1,0 +1,145 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="3FE0E3D7-155A-08C0-9D62-B7648A147C31" name="etapa alimentacion">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Etapas de alimentación según la edad del lote (preiniciación, iniciación, engorde, finalización).]]></commentInRDBMS>
+<generatorID>BB9BEFBA-F9D7-8FE2-2BF0-FE6FFAC3AFF9</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id etapa" id="B5D2737E-7280-E8CA-632C-6C93AF850799">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identificador único del etapa de alimentación (generado automáticamente).]]></commentInRDBMS>
+<generatorID>9A35B954-8E30-833C-6D5D-520D09154F3A</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nombre" id="B1637FAC-77D2-0F6C-AD04-328BDC37AFF7">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nombre de la etapa.]]></commentInRDBMS>
+<generatorID>F85D6485-BA57-3888-4E76-5630B44DE44E</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>579D701C-A81D-4C00-0136-B974F33130A9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="orden" id="3FD4530B-F5D3-B58D-DE2D-55D30AA2E4AD">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Orden de la etapa dentro del ciclo.]]></commentInRDBMS>
+<generatorID>AF6DA474-81E5-8669-412D-2D01E746C4C8</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>007611BB-131C-3CE0-E0A6-6AEC14A72210</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="dia inicio" id="765BEECB-E32E-5868-75F6-4B36BEB35892">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Día de edad del lote en que inicia la etapa.]]></commentInRDBMS>
+<generatorID>4B9B9806-8FC7-6D74-3533-C026C79CCF3C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>007611BB-131C-3CE0-E0A6-6AEC14A72210</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="dia fin" id="64291317-178B-5E70-610A-5D4876528F30">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Día de edad en que termina la etapa; nulo en la última (hasta la venta).]]></commentInRDBMS>
+<generatorID>22A49E33-DDC2-57BD-C639-3099B0BD0F65</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>007611BB-131C-3CE0-E0A6-6AEC14A72210</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha creacion" id="F50C3C20-5AB1-6953-4F4D-9855DDF4662F">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<generatorID>EDC1F905-624B-519E-A27F-442C2F45328C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="56B730CA-BE86-993E-AE85-4BCDBF2BCF87" name="pk etapa alimentacion">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>FBC23544-EE81-46E0-1D33-0E176EB6A57B</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>B5D2737E-7280-E8CA-632C-6C93AF850799</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="87A447B1-C869-4930-21FC-AFB1A26B7ED2" name="uq etapa nombre">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>D67C5B9B-B4BC-C1B0-3714-13425279E540</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>B1637FAC-77D2-0F6C-AD04-328BDC37AFF7</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="B9495C34-006C-59EA-7EFE-B5EC12928E45" name="uq etapa orden">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>858D5255-6A1A-A0C7-8479-DDDCBCE4A0B7</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>3FD4530B-F5D3-B58D-DE2D-55D30AA2E4AD</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,174 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="D3D10C5C-4D69-0B09-7B5C-AD58F42CD649" name="producto sanitario">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Catálogo de vitaminas y medicamentos que se aplican a los lotes.]]></commentInRDBMS>
+<generatorID>E3DF785F-390E-73CA-D645-6BD08DE1D70C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id producto" id="7D8D2045-35EE-1A01-A076-34E72FFC0755">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identificador único del producto sanitario (generado automáticamente).]]></commentInRDBMS>
+<generatorID>B0259528-7204-90E9-8821-AEE4D5EBBB71</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="nombre" id="3959D795-8E8A-3942-2DF6-B12496E50DE9">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nombre del producto.]]></commentInRDBMS>
+<generatorID>633855BF-1814-D509-68EB-F7499979F869</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>86D3F6D2-E0AB-A8CC-FDF5-5BCFE15A2207</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="tipo" id="D0B0541C-79A2-5FD1-FFA0-37D08585792D">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Tipo de producto: VITAMINA o MEDICAMENTO.]]></commentInRDBMS>
+<generatorID>D5754537-A2B0-87DD-B04E-3BD547A1474D</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<constraintName>ck_producto_san_tipo_dom</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DBCAB07C-5D07-51CE-4836-E1ED93F31E44</domain>
+<listOfValues>
+<valueDef value="MEDICAMENTO" description=""/>
+<valueDef value="VITAMINA" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="presentacion" id="3E61CE2E-12DA-B944-7BF9-F1F75E80773B">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Presentación comercial (por ejemplo, frasco de 1 L).]]></commentInRDBMS>
+<generatorID>1163D06E-9C06-6498-DA92-83B3F3B95B11</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>AA09E311-B567-B1FB-B5B1-F8F5A2DBD081</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="unidad medida" id="E91F3DAF-C396-E451-9D0F-D4C04AA63AB8">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Unidad en que se mide la dosis (ml, g, etc.).]]></commentInRDBMS>
+<generatorID>6CA31973-E7A4-93DF-BFD5-049DF1EB70E4</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>60029F70-7A5E-BEDD-1C23-1A17D1943ED7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id proveedor" id="E80D8D71-18D3-FE43-7107-AB0BE7B38F79">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Referencia al proveedor (proveedor).]]></commentInRDBMS>
+<generatorID>68E9CD33-9254-A06B-A267-D6924EC9EF86</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<referedAttribute>83E7D6EF-16D0-0ED2-7B8A-74C4443CB203</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="activo" id="4A6EE1B9-6190-E0B8-E879-8FC778E496B5">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Indica si el registro está activo; los inactivos no se usan en registros nuevos.]]></commentInRDBMS>
+<generatorID>5125C017-B566-6567-C46B-26FD8FB6D8FE</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<constraintName>ck_producto_san_activo_bool</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>69F5A670-9ADA-DF86-262B-FAB9FBE07000</domain>
+<listOfValues>
+<valueDef value="N" description=""/>
+<valueDef value="S" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha creacion" id="74DF0D97-F667-EB5F-FA02-95FB49283FC1">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<generatorID>12BB18C6-9F34-CCD8-D036-9FC290237006</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="E6B2BE0F-5C5F-6B06-94B3-1FF3718EEEAE" name="pk producto sanitario">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>4B55B7B9-1C4D-AA61-58B0-F54139225E39</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>7D8D2045-35EE-1A01-A076-34E72FFC0755</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="5C9E931D-2A0E-ABA7-DEB6-3E650031D43D" name="uq producto nombre presentacion">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>A8CF3769-5F28-DD82-074C-92D644571A1C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<usedAttributes>
+<attributeRef>3959D795-8E8A-3942-2DF6-B12496E50DE9</attributeRef>
+<attributeRef>3E61CE2E-12DA-B944-7BF9-F1F75E80773B</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,15 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<relationalModel class="oracle.dbtools.crest.model.design.relational.RelationalDesign" name="Relational_1" id="2AADEE48-5254-2F8F-3CA0-C73F6A769596" mainViewID="8C05F7B1-F9CF-29D4-1F27-1191511DC645">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:06:58 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+<selectedRDBMSSite>01F6E6D1-21D0-CFBD-ABDD-3988D1813575</selectedRDBMSSite>
+<importDDLFileStamps>
+<importDDLFileStamp class="oracle.dbtools.crest.imports.DDLFileStamp">
+<fileName>Modelo_relacional_para_Data_Modeler.sql</fileName>
+<pathName>/home/gas-fring/Documents/Modelos_Pollos_Hermanos</pathName>
+<dbType>17</dbType>
+</importDDLFileStamp>
+</importDDLFileStamps>
+</relationalModel>

@@ -1,0 +1,171 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E3DF785F-390E-73CA-D645-6BD08DE1D70C" name="producto_sanitario">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Catálogo de vitaminas y medicamentos que se aplican a los lotes.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>192006D0-243A-3240-5257-8CD1558748D1</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_producto" id="B0259528-7204-90E9-8821-AEE4D5EBBB71">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identificador único del producto sanitario (generado automáticamente).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>F42BF1B6-31F9-006E-88C9-DC6A43901B42</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nombre" id="633855BF-1814-D509-68EB-F7499979F869">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nombre del producto.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>AECEE850-D524-A805-4DC2-37CEE387376E</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>86D3F6D2-E0AB-A8CC-FDF5-5BCFE15A2207</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="tipo" id="D5754537-A2B0-87DD-B04E-3BD547A1474D">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Tipo de producto: VITAMINA o MEDICAMENTO.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>80B515E5-D839-4497-BD83-456023BC376A</importedID>
+<constraintName>ck_producto_san_tipo_dom</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>DBCAB07C-5D07-51CE-4836-E1ED93F31E44</domain>
+<listOfValues>
+<valueDef value="MEDICAMENTO" description=""/>
+<valueDef value="VITAMINA" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="presentacion" id="1163D06E-9C06-6498-DA92-83B3F3B95B11">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Presentación comercial (por ejemplo, frasco de 1 L).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>F4B57025-CF1A-F0D2-F8DC-0BE97ECCE209</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>AA09E311-B567-B1FB-B5B1-F8F5A2DBD081</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="unidad_medida" id="6CA31973-E7A4-93DF-BFD5-049DF1EB70E4">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Unidad en que se mide la dosis (ml, g, etc.).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>078470F3-3469-E82E-7B7F-5A09D56E383B</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>60029F70-7A5E-BEDD-1C23-1A17D1943ED7</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="id_proveedor" id="58147A12-50B0-C1D3-E665-2AB5F42A1CAA">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Referencia al proveedor (proveedor).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>1141AC17-92B1-499A-53D2-320BA1E1DB1F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="212B6211-1AF1-3F06-CB75-AF4C57531317" referredColumn="55317BC2-7E85-C080-CDE6-F4A23D29AD20"/>
+</associations>
+</Column>
+<Column name="activo" id="5125C017-B566-6567-C46B-26FD8FB6D8FE">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Indica si el registro está activo; los inactivos no se usan en registros nuevos.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>ECB53438-D195-A7F9-820C-0C4BCF66C589</importedID>
+<constraintName>ck_producto_san_activo_bool</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>69F5A670-9ADA-DF86-262B-FAB9FBE07000</domain>
+<listOfValues>
+<valueDef value="N" description=""/>
+<valueDef value="S" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_creacion" id="12BB18C6-9F34-CCD8-D036-9FC290237006">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>90853FE1-220C-A258-04EA-9A9307841D3D</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="4B55B7B9-1C4D-AA61-58B0-F54139225E39" name="pk_producto_sanitario">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>0F252AA5-2F0A-EEF8-55E8-8D0F63F65694</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B0259528-7204-90E9-8821-AEE4D5EBBB71"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A8CF3769-5F28-DD82-074C-92D644571A1C" name="uq_producto_nombre_presentacion">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>CE09B208-F21C-4C4B-EE24-7B3FC04B5970</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="633855BF-1814-D509-68EB-F7499979F869"/>
+<colUsage columnID="1163D06E-9C06-6498-DA92-83B3F3B95B11"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="177A6B6E-1199-E0B7-7AD9-25AAB7DCA349" name="fk_producto_proveedor">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="58147A12-50B0-C1D3-E665-2AB5F42A1CAA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

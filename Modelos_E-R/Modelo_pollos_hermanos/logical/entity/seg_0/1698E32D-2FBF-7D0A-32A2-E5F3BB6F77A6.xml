@@ -1,0 +1,95 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="1698E32D-2FBF-7D0A-32A2-E5F3BB6F77A6" name="detalle pedido">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Aves de cada lote incluidas en un pedido (relación N:M entre pedido y lote).]]></commentInRDBMS>
+<generatorID>56F3A791-7D2C-82A4-D6F0-0648E0B6A52F</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id pedido" id="DA02A7AA-785F-4882-990B-30739D278A32">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al pedido (pedido).]]></commentInRDBMS>
+<generatorID>DF1FFB02-0C81-6316-3572-2ECF711FCF33</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<referedAttribute>0EA5C440-2D2F-9B37-0CEA-5B168F0250CD</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="id lote" id="29ECC9CF-3E0C-655E-622B-1CE1603EF027">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al lote (lote).]]></commentInRDBMS>
+<generatorID>8052AA79-BB5E-305F-B183-5334D01676B5</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<referedAttribute>32811904-E25D-72C2-3A17-ED21208E274D</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="cantidad aves" id="5E1819F6-9A95-A6CD-899B-524A6C62247F">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Aves de ese lote incluidas en el pedido.]]></commentInRDBMS>
+<generatorID>2C77526D-9E87-7A90-9995-275E33F43210</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>4AA71520-0D34-9F50-AF08-EEB47F07288A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="fecha creacion" id="5E48C0DE-C6A5-D45B-F32F-F081A39D1D06">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<generatorID>C6622723-BF45-496E-5DB3-596FD83463EC</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="9BDB9D33-D9A6-96FE-20CE-A52B389C9FF4" name="pk detalle pedido">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>70788322-5010-D5FB-6CEE-5FF107002F0D</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>DA02A7AA-785F-4882-990B-30739D278A32</attributeRef>
+<attributeRef>29ECC9CF-3E0C-655E-622B-1CE1603EF027</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

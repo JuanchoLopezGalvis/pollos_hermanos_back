@@ -1,0 +1,108 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="56F3A791-7D2C-82A4-D6F0-0648E0B6A52F" name="detalle_pedido">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Aves de cada lote incluidas en un pedido (relación N:M entre pedido y lote).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>A39C7AB3-F3F8-F6C4-B2D7-73DD3B675816</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_pedido" id="932C1AB8-23B4-111E-60C8-5C616707F703">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al pedido (pedido).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>B7095869-AFF7-8927-BA37-EFB13E000E06</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="78E16733-4736-7D49-FE76-2410633E2211" referredColumn="DA8BF34B-47BD-6F4E-89FC-6CD544467831"/>
+</associations>
+</Column>
+<Column name="id_lote" id="15642DCB-477F-74ED-634D-84F190A282D6">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al lote (lote).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>0324D1B3-5394-C2F5-6DEA-B563ABF4CAE3</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="02C0BFB2-D709-2DD8-BA61-7169268F5150" referredColumn="F6B9DD9D-4BA3-54EE-6159-EB15B6AB6EB1"/>
+</associations>
+</Column>
+<Column name="cantidad_aves" id="2C77526D-9E87-7A90-9995-275E33F43210">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Aves de ese lote incluidas en el pedido.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>835AF40B-CB82-5422-CF80-54EBB2F0BC67</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>4AA71520-0D34-9F50-AF08-EEB47F07288A</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_creacion" id="C6622723-BF45-496E-5DB3-596FD83463EC">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>73D3FC22-F3E0-5D70-3E09-7C1D273F4C8F</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="70788322-5010-D5FB-6CEE-5FF107002F0D" name="pk_detalle_pedido">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>3F943CC3-0491-7D4F-0503-F4EDBDD1F8A4</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="932C1AB8-23B4-111E-60C8-5C616707F703"/>
+<colUsage columnID="15642DCB-477F-74ED-634D-84F190A282D6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="5E5EDE1A-4FC3-1927-33E0-8003FFB3AAAF" name="fk_detalle_pedido_lote">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="15642DCB-477F-74ED-634D-84F190A282D6"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AD2992BA-1674-B40D-A44C-3E14D1EC2119" name="fk_detalle_pedido_pedido">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="932C1AB8-23B4-111E-60C8-5C616707F703"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

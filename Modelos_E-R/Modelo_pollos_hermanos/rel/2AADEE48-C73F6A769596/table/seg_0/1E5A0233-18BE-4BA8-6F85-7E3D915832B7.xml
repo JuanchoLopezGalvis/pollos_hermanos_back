@@ -1,0 +1,124 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1E5A0233-18BE-4BA8-6F85-7E3D915832B7" name="metodo_pago">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Catálogo de métodos de pago (en línea, efectivo, transferencia, crédito).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>E080EC73-3B52-4FAF-2E75-ACD8CE5E55D3</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_metodo_pago" id="230FB6F4-8A89-03E9-3AAE-9C82C4C383BA">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Identificador único del método de pago (generado automáticamente).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>59B78215-DDBE-A5B0-356F-644D447D8BAE</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="codigo" id="941E8BE9-4670-29A8-404E-A7CD0C8234C3">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Código único en mayúsculas que usa la lógica de negocio.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>38609887-5094-3102-7A9A-AE91EAC54387</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>315B305A-4A9B-DE35-3194-877DEA12A1EC</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="nombre" id="3D8EE431-573B-D745-6639-DD69EA0FA783">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Nombre único visible para el usuario.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>4A1FB180-E661-B378-90C4-5986836A9D20</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>B9E6B956-56EC-02F8-A1AB-F2ED909DC15B</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="activo" id="F40074C1-5E68-A740-0AF2-6CBED3A18E11">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Indica si el registro está activo; los inactivos no se usan en registros nuevos.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>91D82093-78F2-18A2-8CD6-A5E6412C23E8</importedID>
+<constraintName>ck_metodo_pago_activo_bool</constraintName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>0</use>
+<logicalDatatype>LOGDT025</logicalDatatype>
+<domain>69F5A670-9ADA-DF86-262B-FAB9FBE07000</domain>
+<listOfValues>
+<valueDef value="N" description=""/>
+<valueDef value="S" description=""/>
+</listOfValues>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="fecha_creacion" id="844F1F8E-30EA-F499-2E0A-45FF538E59A7">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Fecha y hora de creación del registro.]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>9263232B-BFB1-BA09-4267-74F393C685A0</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT015</logicalDatatype>
+<domain>4BC7190B-07A9-2CEC-44C0-E45D3F51E9D9</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="90C93886-A086-E051-FB86-CD45F73C690E" name="pk_metodo_pago">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>469D576C-8F27-5C23-553A-5C3E82A960F0</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="230FB6F4-8A89-03E9-3AAE-9C82C4C383BA"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="53DC461F-1FEA-AD58-1968-62F04A47DB46" name="uq_metodo_pago_codigo">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>3D6566FC-0AD2-E6C1-B5E4-08BA36F625B4</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="941E8BE9-4670-29A8-404E-A7CD0C8234C3"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="3B08F1E7-A57B-D0DE-0EC4-28DAB6C5D00F" name="uq_metodo_pago_nombre">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>6FFCA470-74F4-D62F-0484-0401A4BF8CFD</importedID>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3D8EE431-573B-D745-6639-DD69EA0FA783"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

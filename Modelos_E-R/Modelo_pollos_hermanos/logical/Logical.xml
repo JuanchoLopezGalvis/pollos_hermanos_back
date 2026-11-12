@@ -1,0 +1,7 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<LogicalDesign class="oracle.dbtools.crest.model.design.logical.LogicalDesign" name="Logical" id="BEB7D7F9-1E21-A474-13D9-6DD1653CC93B" mainViewID="8172150D-167C-8F35-9159-C6E6688FE7CC">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:06:57 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<shouldBeOpen>false</shouldBeOpen>
+</LogicalDesign>

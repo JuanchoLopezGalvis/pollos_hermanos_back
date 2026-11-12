@@ -1,0 +1,76 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="auditoria" directorySegmentName="seg_0" id="88CEC6DA-8445-385F-E298-7EFDBC6DD0F2">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="datos_antes" id="022968AA-259E-FFA0-B14E-83BA657C5F20">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="tabla" id="210472A4-D39E-A867-138E-1CA92F38DEE2">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_registro" id="42141A55-9CD0-C5AC-FDA4-374579853C37">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="usuario_app" id="6011001E-CDA6-8528-4017-BC5AC3DA2775">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="operacion" id="667FC2BA-4572-7873-C49C-BEFDE3BC4DD1">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_transaccion" id="7E5DF7F2-74ED-C1BE-415E-B5E519986433">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="usuario_bd" id="9C1103ED-6CA7-9619-4B38-A544799B7948">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="columnas_cambiadas" id="A0E1103C-F5B9-B038-CAA4-8F0C8B88DDE7">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id_auditoria" id="CAA563F6-303C-C489-2BA0-7BD496FDB141">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="datos_despues" id="CCA757E4-59BF-88ED-5C15-C0886EC6E5F5">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="fecha_creacion" id="CF633CEF-4670-CDAF-B2E5-F1DBBB829298">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="pk_auditoria" id="651AFD46-2905-CA17-6821-A4256EB5F019">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>
