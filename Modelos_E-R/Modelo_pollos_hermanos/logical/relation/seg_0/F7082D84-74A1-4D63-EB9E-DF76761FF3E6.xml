@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_detalle_beneficio_jornada" directorySegmentName="seg_0" id="F7082D84-74A1-4D63-EB9E-DF76761FF3E6">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>37880BBA-9366-5E30-5E37-9BA2C4B0088C</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>861B917D-3131-2CE0-C59E-3A05C6A4815D</sourcePk>
+<identifying>true</identifying>
+<optionalSource>false</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>B91B5123-DDD1-C205-7560-C178B17A9FDF</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>AA0E14E1-E64E-95DD-3615-24F6258F6FD7</targetEntity>
+<transferable>true</transferable>
+<deleteRule>CASCADE</deleteRule>
+</Relation>

@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_pago_metodo" directorySegmentName="seg_0" id="0A7B3363-74C8-01CF-C377-6BFAAD68A80A">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>14A4F537-9FB1-36B9-9F33-FE1EC9BD59E6</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>2BB308D3-78C7-EF17-D076-98881B02AD9A</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>D9FA06E4-2FDE-5FEF-9B4C-3D0097CCA59B</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>6D446803-2550-01AD-9556-33727DA0D2BC</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_aplicacion_producto" directorySegmentName="seg_0" id="0D6C6BF8-346C-BD7A-3400-6F58F33EB3E1">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>21F52E80-A627-3D58-0F93-64D52AC7C495</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>E6B2BE0F-5C5F-6B06-94B3-1FF3718EEEAE</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>D3D10C5C-4D69-0B09-7B5C-AD58F42CD649</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>8158D0B2-7180-F4A4-8C09-E011D9846241</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

@@ -1,0 +1,20 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="fk_mortalidad_lote" directorySegmentName="seg_0" id="13FF1F12-E873-21CF-D3D4-1EC4A79976B8">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:31:37 UTC</createdTime>
+<generatorID>3F6CCF0E-6246-5A9F-FFD1-2DA8BB30B2BA</generatorID>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<engineerTo>
+<item key="2AADEE48-5254-2F8F-3CA0-C73F6A769596" value="true"/>
+</engineerTo>
+<sourcePk>7D78EB3B-B99B-2968-CF5D-B935F59EBD59</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>1C3A01FB-3E1A-2733-2101-ACBF3B69213A</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>253EF172-DFD8-AA7F-BA3D-277CEAF7768D</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

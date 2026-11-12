@@ -1,0 +1,18 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="160782B7-A56B-ED43-249C-17BB2EFDCD46" containerWithKeyObject="784B08B4-8A0C-F75A-6441-C5E12F67FBAB" localFKIndex="7CAD1EE6-7050-C15F-0688-5271C1220D12" name="fk_compra_alimento_proveedor">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>BE53D8AF-FA37-FBC1-1076-AF0217DAF848</importedID>
+<referredTableLongName>proveedor</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>E1E28524-BD18-2C7E-EF69-4CC850B47697</referredTableID>
+<keyObject>76884916-BC27-E4A9-BA01-7A3F30AAC84D</keyObject>
+<referredKeyID>76884916-BC27-E4A9-BA01-7A3F30AAC84D</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>id_proveedor</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

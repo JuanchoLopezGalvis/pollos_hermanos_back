@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="61155E5B-ADFB-1E3F-AE72-8D6EA35DEF2C" name="usuario_rol">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Roles asignados a cada usuario (relación N:M).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>ECD7BB70-BBD8-2C1B-26F9-11E711BB217E</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_usuario" id="D46EC6A4-D7BD-3118-C763-3DA9C0DDCEE0">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al usuario (usuario).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>7B1E2E11-EA71-D999-93BE-1DC0C0DE01FF</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B523BFFC-7142-BE36-68D0-69DF07A74193" referredColumn="E0B9AAFB-EA71-1EE0-5F47-ACB86BF7AF0A"/>
+</associations>
+</Column>
+<Column name="id_rol" id="50FE6C83-AA23-A52E-1766-0AED6FA18454">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al rol (rol).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>DA29D9C1-5F5A-C44E-7B12-8550D2E44010</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="AEF3CFAF-9EB7-3C4D-D715-A68EE470158E" referredColumn="72F0E4EA-C033-CA94-06A3-EE497054FBC9"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8930D2C0-584E-DF29-02FD-3FB592DBEE70" name="usuario_rol_pkey">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>A20FDB1A-1CF7-B033-822F-434C7A804D20</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D46EC6A4-D7BD-3118-C763-3DA9C0DDCEE0"/>
+<colUsage columnID="50FE6C83-AA23-A52E-1766-0AED6FA18454"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E90B66E3-FD9C-3E38-1CED-B41AB4082F16" name="usuario_rol_id_rol_fkey">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="50FE6C83-AA23-A52E-1766-0AED6FA18454"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="A55CBF71-6A05-4A55-4D7A-1FC7599600BD" name="usuario_rol_id_usuario_fkey">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="D46EC6A4-D7BD-3118-C763-3DA9C0DDCEE0"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,82 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="6A27613A-28A0-1FF5-5D4A-D3FBDF6A1C68" name="usuario_permiso">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Permisos asignados directamente a un usuario (relación N:M).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>C34DFFD3-2604-2C3F-AD90-6D83B773DE41</importedID>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id_usuario" id="232A9086-4625-27CD-D767-CFA5B8244B85">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al usuario (usuario).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>31CD8949-B8FC-8FC7-1624-CB9964371E5C</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C8965D22-5B60-DA3B-CE51-627A8B07BF35" referredColumn="E0B9AAFB-EA71-1EE0-5F47-ACB86BF7AF0A"/>
+</associations>
+</Column>
+<Column name="id_permiso" id="6166949C-B07A-FDC5-875C-27C994610201">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<commentInRDBMS><![CDATA[Parte de la clave primaria. Referencia al permiso (permiso).]]></commentInRDBMS>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>0D6C687A-1228-A03E-4C6E-7323AC1B7A5D</importedID>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>980E66AB-18FE-C761-32AA-66BC280C7A75</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="0F2F0072-9088-F336-8C89-000E74EC1EDF" referredColumn="0744A54A-394E-AB69-C09F-90A7C3080C17"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="8163FEB1-EB5C-7DD3-2449-05AD62A3E1BB" name="usuario_permiso_pkey">
+<sourceDDLFile>Modelo_relacional_para_Data_Modeler.sql</sourceDDLFile>
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<importedID>29F1FD5F-1C07-FF2B-A4D2-266D3D10F58A</importedID>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="232A9086-4625-27CD-D767-CFA5B8244B85"/>
+<colUsage columnID="6166949C-B07A-FDC5-875C-27C994610201"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="622FDA65-E862-98FC-B99C-5FB66AFCD41F" name="usuario_permiso_id_permiso_fkey">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6166949C-B07A-FDC5-875C-27C994610201"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="8613D7D1-0C88-CC14-A3FE-6D8694566A2C" name="usuario_permiso_id_usuario_fkey">
+<createdBy>gas-fring</createdBy>
+<createdTime>2026-11-11 18:09:02 UTC</createdTime>
+<ownerDesignName>Modelo_pollos_hermanos</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="232A9086-4625-27CD-D767-CFA5B8244B85"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
